@@ -48,7 +48,7 @@ button{cursor:pointer;font-family:inherit;}
 .btn-red:hover{background:#fecaca;}
 
 /* ── MAIN ── */
-#main{padding:14px 16px 60px;}
+#main{padding:14px 16px 60px;max-width:1600px;margin:0 auto;}
 .page-section{display:none;}
 .page-section.active{display:block;}
 .wrap{overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch;}
@@ -417,7 +417,7 @@ function getLeaveAlloc(n){return LEAVE_ALLOC[n]||5;}
 function getLeaveUsed(n){let u=0;Object.values(DB).forEach(mo=>{if(!mo.leaves)return;mo.leaves.filter(l=>l.emp===n&&l.status==='approved').forEach(l=>u+=n2(l.days));});return u;}
 
 let DB={}, curMonth='', curPage='payroll', otWkIdx=0;
-const WEEKLY_EXCL=['GONZAGA, ROMEO','OFIANA, MICTHEL'];
+const WEEKLY_EXCL=[];
 let pendingGroup='', confirmCb=null;
 
 function save(){localStorage.setItem('pr26c',JSON.stringify(DB));localStorage.setItem('pr26cm',curMonth);}
@@ -699,7 +699,7 @@ function renderOT(){
   <div class="oc"><div class="oc-l">LITRAD OT Pay</div><div class="oc-v" style="color:var(--blue);font-size:16px">${PF(lPay)}</div><div class="oc-s">${mo.litrad.length} employees</div></div>
   <div class="oc"><div class="oc-l">JVT PAYROLL OT</div><div class="oc-v" style="color:#065f46;font-size:16px">${PF(jPay)}</div><div class="oc-s">${mo.jvt.length} employees</div></div></div>
   <div class="wrap"><div class="ot-g-lbl ot-g-litrad">LITRAD EMPLOYEES</div>${renderOTTable(mo.litrad,'litrad',wk)}<div style="height:14px"></div><div class="ot-g-lbl ot-g-jvt">JVT PAYROLL</div>${renderOTTable(mo.jvt,'jvt',wk)}</div>
-  <div style="margin-top:12px;padding:9px 13px;background:var(--blue-bg);border:1px solid #bfdbfe;border-radius:8px;font-size:11px;color:var(--blue)"><b>Formula:</b> Hourly Rate = (Weekly Pay + Allowance) ÷ Work Days ÷ 8hrs &nbsp;·&nbsp; OT Pay = Hourly Rate × 1.25 × Total OT Hrs</div>`;
+  <div style="margin-top:12px;padding:9px 13px;background:var(--blue-bg);border:1px solid #bfdbfe;border-radius:8px;font-size:11px;color:var(--blue)"><b>Formula:</b> Hourly Rate = Weekly Pay ÷ Work Days ÷ 8hrs &nbsp;·&nbsp; OT Pay = Hourly Rate × 1.25 × Total OT Hrs</div>`;
 }
 function renderOTTable(emps,gk,wk){
   const wkIdx=WKS.indexOf(wk);const weekDates=getWeekDates(wkIdx);const startIso=weekDates[0].isoDate;
@@ -766,7 +766,7 @@ function renderWeekly(){
     const fss=gSum(filtered,['sss']),fph=gSum(filtered,['ph']),fpg=gSum(filtered,['pag']),fsl=gSum(filtered,['sssl']),fpl=gSum(filtered,['pagl']),fab=gSum(filtered,['abs']),fd=fss+fph+fpg+fsl+fpl+fab,fn=fi-fd;
     const cf=(v,red,bold,bg)=>`<td style="text-align:right;padding:6px 10px;font-size:11px;font-weight:${bold?'800':'700'};${red?'color:var(--red);':''}${bg?'background:'+bg+';':''}border-top:2px solid var(--border2)">${v?P(v):'-'}</td>`;
     const foot=`<tr style="background:#f4f7fc"><td class="nm" style="font-size:10px;color:var(--text3);text-transform:uppercase;border-top:2px solid var(--border2)">TOTAL</td>${cf(fp)}${cf(fa)}${cf(fo)}${cf(fh)}<td style="text-align:right;padding:6px 10px;font-size:11px;font-weight:800;border-top:2px solid var(--border2);border-right:2px solid var(--border2)">${fi?P(fi):'-'}</td>${cf(fss,1)}${cf(fph,1)}${cf(fpg,1)}${cf(fsl,1)}${cf(fpl,1)}${cf(fab,1)}<td style="text-align:right;padding:6px 10px;font-size:11px;font-weight:800;color:var(--red);border-top:2px solid var(--border2);border-right:2px solid var(--border2)">${fd?P(fd):'-'}</td><td style="text-align:right;padding:6px 10px;font-size:12px;font-weight:800;color:var(--green);background:var(--green-bg);border-top:2px solid var(--border2)">${fn?P(fn):'-'}</td></tr>`;
-    return `<div class="group-block" style="margin-bottom:22px"><div class="group-head ${gcls}">${glabel}<span style="margin-left:auto;font-size:9px;opacity:.6">${filtered.length} employees · ${curMonth} ${curYear}</span></div><div style="overflow-x:auto"><table style="border-collapse:collapse;background:var(--white);border:1.5px solid var(--border);border-top:none;white-space:nowrap;width:100%"><thead><tr style="background:#f8faff">${h1}</tr><tr style="background:#f8faff">${h2}</tr></thead><tbody>${rows}</tbody><tfoot>${foot}</tfoot></table></div></div>`;
+    return `<div class="group-block" style="margin-bottom:22px"><div class="group-head ${gcls}">${glabel}<span style="position:absolute;left:50%;transform:translateX(-50%);font-size:10px;font-weight:700;letter-spacing:.5px;opacity:.95">${curMonth} ${curYear}</span><span style="margin-left:auto;font-size:9px;opacity:.6">${filtered.length} employees</span></div><div style="overflow-x:auto;border-radius:0 0 8px 8px"><table style="border-collapse:collapse;background:var(--white);border:1.5px solid var(--border);border-top:none;white-space:nowrap;min-width:100%;table-layout:auto"><thead><tr style="background:#f8faff">${h1}</tr><tr style="background:#f8faff">${h2}</tr></thead><tbody>${rows}</tbody><tfoot>${foot}</tfoot></table></div></div>`;
   }
   area.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
     <div class="section-title" style="margin-bottom:0">MONTHLY SUMMARY — <span style="color:var(--blue)">${curMonth} ${curYear}</span></div>
@@ -1427,21 +1427,21 @@ function exportWeeklyBreakdownPDF(selectedWk, layout){
   // Column definitions — earnings | per-day OT | deductions | totals
   const DAY_COLS=DAYS; // ['Thu','Fri','Sat','Sun','Mon','Tue','Wed']
   const colDefs=[
-    {key:'name',   label:'EMPLOYEE',   w:46, align:'left'},
-    {key:'pay',    label:'REG PAY',    w:22, align:'right'},
-    {key:'allow',  label:'ALLOW',      w:18, align:'right'},
+    {key:'name',   label:'EMPLOYEE',   w:44, align:'left'},
+    {key:'pay',    label:'REG PAY',    w:21, align:'right'},
+    {key:'allow',  label:'ALLOW',      w:17, align:'right'},
+    {key:'hol',    label:'HOL PAY',    w:17, align:'right'},
     // per-day OT hrs — added dynamically
-    ...DAY_COLS.map(d=>({key:'ot_'+d, label:d.toUpperCase(), w:12, align:'center', isOT:true})),
-    {key:'ot_total',label:'OT HRS',   w:14, align:'center'},
-    {key:'ot_pay', label:'OT PAY',    w:22, align:'right'},
-    {key:'hol',    label:'HOL',       w:16, align:'right'},
-    {key:'sss',    label:'SSS',       w:16, align:'right'},
-    {key:'ph',     label:'PhilHlth',  w:16, align:'right'},
-    {key:'pag',    label:'Pag-IBIG',  w:16, align:'right'},
-    {key:'sssl',   label:'SSS Loan',  w:16, align:'right'},
-    {key:'abs',    label:'ABS/DED',   w:16, align:'right'},
-    {key:'earn',   label:'TOTAL EARN',w:24, align:'right'},
-    {key:'net',    label:'NET PAY',   w:24, align:'right'},
+    ...DAY_COLS.map(d=>({key:'ot_'+d, label:d.toUpperCase(), w:11, align:'center', isOT:true})),
+    {key:'ot_total',label:'OT HRS',   w:13, align:'center'},
+    {key:'ot_pay', label:'OT PAY',    w:21, align:'right'},
+    {key:'sss',    label:'SSS',       w:15, align:'right'},
+    {key:'ph',     label:'PhilHlth',  w:15, align:'right'},
+    {key:'pag',    label:'Pag-IBIG',  w:15, align:'right'},
+    {key:'sssl',   label:'SSS Loan',  w:15, align:'right'},
+    {key:'abs',    label:'ABS/DED',   w:15, align:'right'},
+    {key:'earn',   label:'TOTAL EARN',w:23, align:'right'},
+    {key:'net',    label:'NET PAY',   w:23, align:'right'},
   ];
   // Total width check — scale if needed
   const totalColW=colDefs.reduce((s,c)=>s+c.w,0);
@@ -1481,18 +1481,20 @@ function exportWeeklyBreakdownPDF(selectedWk, layout){
 
     // ── Company header bar ──
     doc.setFillColor(...barClr);doc.rect(M,y,availW,HEADER_H,'F');
-    doc.setFont('helvetica','bold');doc.setFontSize(8.5);doc.setTextColor(255,255,255);
-    doc.text(companyName,M+4,y+5.5);
-    doc.setCharSpace(0.3);
-    doc.text(curMonth+' '+curYear+'  \u2014  WEEK '+selectedWk+' PAYROLL',PW-M-4,y+5.5,{align:'right'});
+    doc.setFont('helvetica','bold');doc.setTextColor(255,255,255);
+    // Company name — left
+    doc.setFontSize(8.5);doc.text(companyName,M+4,y+5.5);
+    // Date + week — CENTERED
+    doc.setFontSize(8.5);doc.setCharSpace(0.3);
+    doc.text(curMonth+' '+curYear+'  \u2014  WEEK '+selectedWk+' PAYROLL',M+availW/2,y+5.5,{align:'center'});
     doc.setCharSpace(0);
     y+=HEADER_H;
 
     // ── Column group headers (Earnings | OT per Day | Deductions | Total) ──
     const GROUPS=[
-      {label:'EARNINGS', cols:['name','pay','allow'], color:[240,245,255]},
+      {label:'EARNINGS', cols:['name','pay','allow','hol'], color:[240,245,255]},
       {label:'OVERTIME (HRS)', cols:DAY_COLS.map(d=>'ot_'+d).concat(['ot_total','ot_pay']), color:[255,248,235]},
-      {label:'DEDUCTIONS', cols:['hol','sss','ph','pag','sssl','abs'], color:[255,243,243]},
+      {label:'DEDUCTIONS', cols:['sss','ph','pag','sssl','abs'], color:[255,243,243]},
       {label:'TOTALS', cols:['earn','net'], color:[235,245,235]},
     ];
     let gx=M;
