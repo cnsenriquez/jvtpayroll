@@ -198,14 +198,14 @@ td.sep-l{border-left:2px solid var(--border2)!important;}
 .ps-info-val{font-size:10.5px;font-weight:700;color:#111;}
 .ps-editable{font-size:10.5px;font-weight:700;color:#111;border:none;border-bottom:1px dashed #bbb;background:transparent;outline:none;width:100%;font-family:inherit;padding:0;cursor:text;}
 .ps-editable:focus{border-bottom-color:#111;background:#f5f5f5;padding:1px 3px;}
-.ps-tables-row{display:grid;grid-template-columns:1fr 1fr;margin-bottom:7px;border:1px solid #bbb;}
-.ps-table-wrap:first-child{border-right:1px solid #bbb;}
-.ps-table{width:100%;border-collapse:collapse;font-size:10px;}
-.ps-th-earn,.ps-th-ded{background:#e8e8e8;color:#111;font-size:7.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;padding:5px 8px;border-bottom:1px solid #bbb;}
-.ps-td-lbl{padding:3px 8px;color:#222;border-bottom:1px solid #ebebeb;}
-.ps-td-amt{padding:3px 8px;text-align:right;color:#555;font-weight:500;border-bottom:1px solid #ebebeb;}
-.ps-total-earn td,.ps-total-ded td{background:#e8e8e8;color:#111;font-weight:800;font-size:10.5px;padding:5px 8px;border-top:1px solid #bbb;}
-.ps-total-earn td:last-child,.ps-total-ded td:last-child{text-align:right;}
+.ps-tables-row{margin-bottom:7px;}
+.ps-table-unified{width:100%;border-collapse:collapse;font-size:10px;border:1px solid #bbb;table-layout:fixed;}
+.ps-th-earn{width:50%;background:#e8e8e8;color:#111;font-size:7.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;padding:5px 8px;border-bottom:1px solid #bbb;text-align:center;border-right:1px solid #bbb;}
+.ps-th-ded{width:50%;background:#e8e8e8;color:#111;font-size:7.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;padding:5px 8px;border-bottom:1px solid #bbb;text-align:center;}
+.ps-td-earn{width:50%;padding:4px 8px;border-bottom:1px solid #ebebeb;border-right:1px solid #bbb;}
+.ps-td-ded{width:50%;padding:4px 8px;border-bottom:1px solid #ebebeb;}
+.ps-total-unified td{background:#e8e8e8;color:#111;font-weight:800;font-size:10.5px;padding:5px 8px;border-top:1px solid #bbb;}
+.ps-total-unified td:first-child{border-right:1px solid #bbb;}
 .ps-net-box{background:#111;padding:9px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
 .ps-net-label{font-size:9px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:1px;}
 .ps-net-amt{font-size:18px;font-weight:800;color:#fff;}
@@ -216,13 +216,6 @@ td.sep-l{border-left:2px solid var(--border2)!important;}
 .ps-sig-title{font-size:8px;color:#777;text-align:center;}
 .ps-pdf-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;background:#111;color:#fff;border:none;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s;border-radius:5px;}
 .ps-pdf-btn:hover{background:#333;}
-
-/* ── PDF LAYOUT TOGGLE ── */
-.pdf-layout-toggle{display:none;align-items:center;border-left:1px solid var(--border2);}
-.pdf-layout-btn{padding:6px 11px;border:none;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;background:var(--white);color:var(--text2);display:flex;align-items:center;gap:4px;white-space:nowrap;transition:all .15s;}
-.pdf-layout-btn:hover{background:var(--bg);}
-.pdf-layout-btn.active{background:var(--blue);color:#fff;}
-.pdf-layout-sep-line{width:1px;height:20px;background:var(--border2);}
 
 /* ── STATUS BAR ── */
 #sbar{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--border);padding:6px 16px;display:flex;gap:18px;align-items:center;font-size:11px;color:var(--text3);box-shadow:0 -1px 8px rgba(20,40,100,.06);z-index:50;}
@@ -263,6 +256,7 @@ td.sep-l{border-left:2px solid var(--border2)!important;}
     <div class="logo-sub" id="logo-sub-year">PAYROLL SYSTEM · 2026</div>
   </div>
   <div class="vdiv"></div>
+  <!-- YEAR DROPDOWN -->
   <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
     <span style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px">Year</span>
     <div style="position:relative;display:inline-flex;align-items:center;">
@@ -272,6 +266,7 @@ td.sep-l{border-left:2px solid var(--border2)!important;}
     <button onclick="addYear()" title="Add Year" style="padding:4px 9px;border:1.5px solid var(--border2);border-radius:7px;background:var(--white);color:var(--blue);cursor:pointer;font-size:14px;font-weight:800;line-height:1;">+</button>
   </div>
   <div class="vdiv"></div>
+  <!-- PAGE TABS -->
   <div class="page-tabs">
     <button class="ptab active" id="ptab-payroll" onclick="switchPage('payroll')">
       <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>Payroll
@@ -290,6 +285,7 @@ td.sep-l{border-left:2px solid var(--border2)!important;}
     </button>
   </div>
   <div class="vdiv"></div>
+  <!-- MONTH DROPDOWN -->
   <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
     <span style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px">Month</span>
     <div style="position:relative;display:inline-flex;align-items:center;">
@@ -437,8 +433,8 @@ const n2=v=>{const x=parseFloat(String(v||'').replace(/,/g,''));return isNaN(x)?
 const P=v=>{const x=n2(v);return x?x.toLocaleString('en-PH',{minimumFractionDigits:2,maximumFractionDigits:2}):'';}
 const PF=v=>'₱'+n2(v).toLocaleString('en-PH',{minimumFractionDigits:2,maximumFractionDigits:2});
 
-function calcOTPay(emp,wk){const wd=emp.workDays||6;const dr=n2(emp.dailyRate)>0?n2(emp.dailyRate):(n2(emp.cells['pay_'+wk])+n2(emp.cells['allow_'+wk]))/wd;if(!dr)return 0;const hr=dr/8;const hrs=DAYS.reduce((s,d)=>s+n2(emp.ot?.[wk]?.[d]),0);return hr*1.25*hrs;}
-function getEffDailyRate(emp,wk){const wd=emp.workDays||6;return n2(emp.dailyRate)>0?n2(emp.dailyRate):(n2(emp.cells['pay_'+wk])+n2(emp.cells['allow_'+wk]))/wd;}
+function calcOTPay(emp,wk){const dr=getEffDailyRate(emp,wk);if(!dr)return 0;const hr=dr/8;const hrs=DAYS.reduce((s,d)=>s+n2(emp.ot?.[wk]?.[d]),0);return parseFloat((hr*1.25*hrs).toFixed(2));}
+function getEffDailyRate(emp,wk){const wd=emp.workDays||6;if(n2(emp.dailyRate)>0)return n2(emp.dailyRate);const base=n2(emp.cells['pay_'+wk])+n2(emp.cells['allow_'+wk]);return base/wd;}
 function getOTHrs(emp,wk){return DAYS.reduce((s,d)=>s+n2(emp.ot?.[wk]?.[d]),0);}
 function calcNet(emp,wk){const e=['pay','allow','ot','hol'].reduce((s,k)=>s+n2(emp.cells[k+'_'+wk]),0);const d=['sss','ph','pag','sssl','pagl','abs'].reduce((s,k)=>s+n2(emp.cells[k+'_'+wk]),0);return e-d;}
 function ensureOT(emp){if(!emp.ot)emp.ot={};WKS.forEach(w=>{if(!emp.ot[w])emp.ot[w]={};DAYS.forEach(d=>{if(emp.ot[w][d]===undefined)emp.ot[w][d]='';});});}
@@ -488,6 +484,25 @@ function switchPage(p){
   else if(p==='payslip') renderPayslip();
 }
 
+function updateSbar(){
+  const mo=DB[curMonth];
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  set('sb-m', curMonth?curMonth+' '+curYear:'—');
+  if(!mo){set('sb-l','₱0');set('sb-j','₱0');set('sb-t','₱0');return;}
+  const sum=(emps,key)=>emps.filter(e=>!WEEKLY_EXCL.includes(e.name))
+    .reduce((s,e)=>s+WKS.reduce((ws,w)=>ws+n2(e.cells[key+'_'+w]),0),0);
+  const netOf=(emps)=>emps.filter(e=>!WEEKLY_EXCL.includes(e.name))
+    .reduce((s,e)=>s+WKS.reduce((ws,w)=>{
+      const earn=n2(e.cells['pay_'+w])+n2(e.cells['allow_'+w])+n2(e.cells['ot_'+w])+n2(e.cells['hol_'+w]);
+      const ded=n2(e.cells['sss_'+w])+n2(e.cells['ph_'+w])+n2(e.cells['pag_'+w])+n2(e.cells['sssl_'+w])+n2(e.cells['pagl_'+w])+n2(e.cells['abs_'+w]);
+      return ws+earn-ded;
+    },0),0);
+  const lNet=netOf(mo.litrad||[]);
+  const jNet=netOf(mo.jvt||[]);
+  set('sb-l', '₱'+lNet.toLocaleString('en-PH',{minimumFractionDigits:2,maximumFractionDigits:2}));
+  set('sb-j', '₱'+jNet.toLocaleString('en-PH',{minimumFractionDigits:2,maximumFractionDigits:2}));
+  set('sb-t', '₱'+(lNet+jNet).toLocaleString('en-PH',{minimumFractionDigits:2,maximumFractionDigits:2}));
+}
 function renderAll(){
   renderYearTabs();
   renderTabs();
@@ -500,6 +515,35 @@ function renderAll(){
   updateSbar();
 }
 
+function getYearList(){
+  const stored=JSON.parse(localStorage.getItem('pr26_years')||'[]');
+  if(!stored.includes(curYear))stored.push(curYear);
+  stored.sort();
+  localStorage.setItem('pr26_years',JSON.stringify(stored));
+  return stored;
+}
+function switchYear(yr){
+  save();
+  localStorage.setItem('pr26_curyear',yr);
+  curYear=yr;
+  const raw=localStorage.getItem('pr26c_'+yr);
+  DB=raw?JSON.parse(raw):{};
+  curMonth=localStorage.getItem('pr26cm_'+yr)||'';
+  if(!Object.keys(DB).filter(k=>k!=='_empMeta').length){DB['JANUARY']=seedJan();DB['FEBRUARY']=seedFeb();curMonth='FEBRUARY';}
+  if(!curMonth||!DB[curMonth])curMonth=Object.keys(DB).filter(k=>k!=='_empMeta')[0]||'';
+  otWkIdx=0;
+  renderAll();
+}
+function addYear(){
+  const yr=document.getElementById('year-new-input');
+  if(!yr)return;
+  const v=yr.value.trim();
+  if(!v||isNaN(v))return;
+  const updated=getYearList();
+  if(!updated.includes(v)){updated.push(v);updated.sort();localStorage.setItem('pr26_years',JSON.stringify(updated));}
+  yr.value='';
+  if(curYear===yr.value){switchYear(updated[0]);}else{renderYearTabs();}
+}
 function renderYearTabs(){
   const sel=document.getElementById('year-select');
   if(!sel)return;
@@ -602,7 +646,7 @@ function renderOT(){
   <div class="oc"><div class="oc-l">LITRAD OT Pay</div><div class="oc-v" style="color:var(--blue);font-size:16px">${PF(lPay)}</div><div class="oc-s">${mo.litrad.length} employees</div></div>
   <div class="oc"><div class="oc-l">JVT PAYROLL OT</div><div class="oc-v" style="color:#065f46;font-size:16px">${PF(jPay)}</div><div class="oc-s">${mo.jvt.length} employees</div></div></div>
   <div class="wrap"><div class="ot-g-lbl ot-g-litrad">LITRAD EMPLOYEES</div>${renderOTTable(mo.litrad,'litrad',wk)}<div style="height:14px"></div><div class="ot-g-lbl ot-g-jvt">JVT PAYROLL</div>${renderOTTable(mo.jvt,'jvt',wk)}</div>
-  <div style="margin-top:12px;padding:9px 13px;background:var(--blue-bg);border:1px solid #bfdbfe;border-radius:8px;font-size:11px;color:var(--blue)"><b>Formula:</b> Hourly Rate = Weekly Pay ÷ Work Days ÷ 8hrs &nbsp;·&nbsp; OT Pay = Hourly Rate × 1.25 × Total OT Hrs</div>`;
+  <div style="margin-top:12px;padding:9px 13px;background:var(--blue-bg);border:1px solid #bfdbfe;border-radius:8px;font-size:11px;color:var(--blue)"><b>Formula:</b> Hourly Rate = (Weekly Pay + Allowance) ÷ Work Days ÷ 8hrs &nbsp;·&nbsp; OT Pay = Hourly Rate × 1.25 × Total OT Hrs</div>`;
 }
 function renderOTTable(emps,gk,wk){
   const wkIdx=WKS.indexOf(wk);const weekDates=getWeekDates(wkIdx);const startIso=weekDates[0].isoDate;
@@ -620,7 +664,7 @@ function renderOTTable(emps,gk,wk){
   const dayTots=DAYS.map(d=>emps.reduce((s,e)=>s+n2(e.ot?.[wk]?.[d]),0));
   const totH=dayTots.reduce((s,v)=>s+v,0),totP=emps.reduce((s,e)=>s+calcOTPay(e,wk),0);
   const ftd=dayTots.map(t=>`<td class="fh">${t?t.toFixed(1):''}</td>`).join('');
-  return dateRowHtml+`<table class="ott"><thead><tr><th class="nm">EMPLOYEE</th><th class="rc">DAILY RATE<div style="font-size:8px;opacity:.65;font-weight:500;text-transform:none;letter-spacing:0">(pay+allow)÷days</div></th><th class="rc">HOURLY RATE</th>${dh}<th class="tc">TOTAL HRS</th><th class="pc">OT PAY (×1.25)</th></tr></thead><tbody id="ot-tb-${gk}">${rows}</tbody><tfoot><tr><td class="nm">TOTAL</td><td></td><td></td>${ftd}<td class="fh">${totH?totH.toFixed(1):''}</td><td class="fp">${totP?P(totP):''}</td></tr></tfoot></table>`;
+  return dateRowHtml+`<table class="ott"><thead><tr><th class="nm">EMPLOYEE</th><th class="rc">DAILY RATE</th><th class="rc">HOURLY RATE</th>${dh}<th class="tc">TOTAL HRS</th><th class="pc">OT PAY (×1.25)</th></tr></thead><tbody id="ot-tb-${gk}">${rows}</tbody><tfoot><tr><td class="nm">TOTAL</td><td></td><td></td>${ftd}<td class="fh">${totH?totH.toFixed(1):''}</td><td class="fp">${totP?P(totP):''}</td></tr></tfoot></table>`;
 }
 function onDailyRateChange(inp){
   const g=inp.dataset.g,i=parseInt(inp.dataset.i),emp=DB[curMonth][g][i],val=inp.value===''?null:parseFloat(inp.value)||0;emp.dailyRate=val;
@@ -680,7 +724,6 @@ function renderWeekly(){
         <div style="position:relative;display:inline-flex;align-items:center;border-left:1px solid var(--border2);">
           <button id="pdf-opt-weekly" onclick="setSummaryPdfMode('weekly')" style="padding:6px 12px;border:none;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;background:var(--white);color:var(--text2);transition:all .15s;">Weekly</button>
         </div>
-        <!-- WEEK PICKER -->
         <div id="week-picker" style="display:none;align-items:center;border-left:1px solid var(--border2);">
           <select id="summary-week-sel" class="ps-sel" style="border:none;border-radius:0;font-size:11px;padding:5px 22px 5px 8px;min-width:90px;font-weight:700;">
             <option value="W1">Week 1</option>
@@ -691,15 +734,12 @@ function renderWeekly(){
           </select>
           <svg style="position:absolute;right:6px;pointer-events:none;color:var(--text3)" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
-        <!-- LAYOUT PICKER: Separate vs Combined -->
-        <div id="layout-picker" style="display:none;align-items:center;border-left:1px solid var(--border2);">
-          <span style="font-size:9.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;padding:0 8px;white-space:nowrap;border-right:1px solid var(--border2)">Layout</span>
-          <button id="pdf-layout-sep" onclick="setSummaryPdfLayout('separate')" style="padding:6px 11px;border:none;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;background:var(--blue);color:#fff;display:flex;align-items:center;gap:5px;white-space:nowrap;transition:all .15s;border-right:1px solid var(--border2)">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="2" width="9" height="20" rx="1"/><rect x="13" y="2" width="9" height="20" rx="1"/></svg>Separate
-          </button>
-          <button id="pdf-layout-comb" onclick="setSummaryPdfLayout('combined')" style="padding:6px 11px;border:none;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;background:var(--white);color:var(--text2);display:flex;align-items:center;gap:5px;white-space:nowrap;transition:all .15s;">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="2" width="20" height="20" rx="1"/><line x1="2" y1="12" x2="22" y2="12" stroke-dasharray="3 2"/></svg>Combined
-          </button>
+        <div id="layout-picker" style="display:none;position:relative;align-items:center;border-left:1px solid var(--border2);">
+          <select id="summary-layout-sel" class="ps-sel" style="border:none;border-radius:0;font-size:11px;padding:5px 22px 5px 8px;min-width:116px;font-weight:700;">
+            <option value="separate">Separate Pages</option>
+            <option value="combined">Combined (1 page)</option>
+          </select>
+          <svg style="position:absolute;right:6px;pointer-events:none;color:var(--text3)" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
         <button onclick="doExportSummaryPDF()" style="padding:6px 13px;border:none;border-left:1px solid var(--border2);background:#111;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px;">
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>PDF
@@ -778,28 +818,58 @@ function numToWords(n){
   return result.trim();
 }
 
-let psWeek='W1', psGroup='all';
+let psWeek='W1', psGroup='all', psLayout='grid', psEmployee='all';
 function renderPayslip(){
   const area=document.getElementById('payslip-area');
   if(!curMonth||!DB[curMonth]){area.innerHTML='<div style="padding:60px;text-align:center;color:var(--text3)">No data. Select a month first.</div>';return;}
   const mo=DB[curMonth];
   const allEmps=[...mo.litrad.map(e=>({...e,_grp:'LITRAD'})),...mo.jvt.map(e=>({...e,_grp:'JVT'}))];
   const wkOpts=WKS.map(w=>`<option value="${w}"${w===psWeek?' selected':''}>Week ${WKS.indexOf(w)+1} (${w})</option>`).join('');
-  const grpOpts=`<option value="all"${psGroup==='all'?' selected':''}>All Employees</option><option value="litrad"${psGroup==='litrad'?' selected':''}>LITRAD Only</option><option value="jvt"${psGroup==='jvt'?' selected':''}>JVT Only</option>`;
+  const grpOpts=`<option value="all"\${psGroup==='all'?' selected':''}>All Employees</option><option value="litrad"\${psGroup==='litrad'?' selected':''}>LITRAD Only</option><option value="jvt"\${psGroup==='jvt'?' selected':''}>JVT Only</option>`;
+  // Build employee options based on current group filter
+  const empPool=psGroup==='litrad'?allEmps.filter(e=>e._grp==='LITRAD'):psGroup==='jvt'?allEmps.filter(e=>e._grp==='JVT'):allEmps;
+  const empOpts='<option value="all"'+(psEmployee==='all'?' selected':'')+'>All Employees</option>'+empPool.map(e=>'<option value="'+e.name+'"'+(psEmployee===e.name?' selected':'')+'>'+e.name+'</option>').join('');
   let visible=allEmps;
   if(psGroup==='litrad')visible=allEmps.filter(e=>e._grp==='LITRAD');
   if(psGroup==='jvt')visible=allEmps.filter(e=>e._grp==='JVT');
+  if(psEmployee!=='all')visible=visible.filter(e=>e.name===psEmployee);
   const cards=visible.map(emp=>buildPayslipCard(emp,psWeek)).join('');
+  // sync dropdowns from DOM before re-render (prevents reset on rebuild)
+  const _empSel=document.getElementById('ps-emp-sel');
+  if(_empSel && _empSel.value) psEmployee=_empSel.value;
+  const _layoutSel=document.getElementById('ps-layout-sel');
+  if(_layoutSel && _layoutSel.value) psLayout=_layoutSel.value;
+  const _wkSel=document.querySelector('.ps-sel');
+  // sync after rebuild
+  setTimeout(()=>{
+    const el=document.getElementById('ps-layout-sel');if(el)el.value=psLayout;
+    const el2=document.getElementById('ps-emp-sel');if(el2)el2.value=psEmployee;
+  },0);
   area.innerHTML=`<div class="section-title">PAYSLIPS — <span style="color:var(--blue)">${curMonth} ${curYear}</span></div>
   <div class="ps-controls">
-    <span style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase">Week:</span>
+    ${psLayout!=='allweeks'?`<span style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase">Week:</span>
     <div style="position:relative;display:inline-flex;align-items:center;">
       <select class="ps-sel" onchange="psWeek=this.value;renderPayslip()" style="min-width:130px;">${wkOpts}</select>
       <svg style="position:absolute;right:7px;pointer-events:none;color:var(--text3)" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-    </div>
+    </div>`:''}
+    ${psLayout==='allweeks'?`<span style="font-size:11px;font-weight:600;color:var(--green);background:var(--green-bg);padding:4px 10px;border-radius:6px;">All active weeks per employee on 1 page</span>`:''}
     <span style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase">Group:</span>
     <div style="position:relative;display:inline-flex;align-items:center;">
-      <select class="ps-sel" onchange="psGroup=this.value;renderPayslip()" style="min-width:130px;">${grpOpts}</select>
+      <select class="ps-sel" onchange="psGroup=this.value;psEmployee='all';renderPayslip()" style="min-width:130px;">${grpOpts}</select>
+      <svg style="position:absolute;right:7px;pointer-events:none;color:var(--text3)" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <span style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase">Employee:</span>
+    <div style="position:relative;display:inline-flex;align-items:center;">
+      <select class="ps-sel" onchange="psEmployee=this.value;renderPayslip()" id="ps-emp-sel" style="min-width:160px;max-width:200px;">${empOpts}</select>
+      <svg style="position:absolute;right:7px;pointer-events:none;color:var(--text3)" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <span style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase">PDF Layout:</span>
+    <div style="position:relative;display:inline-flex;align-items:center;">
+      <select class="ps-sel" onchange="psLayout=this.value;renderPayslip()" id="ps-layout-sel" style="min-width:140px;">
+        <option value="grid">Grid (multiple)</option>
+        <option value="fullpage">Full Page (1 per page)</option>
+        <option value="allweeks">All Weeks Per Employee</option>
+      </select>
       <svg style="position:absolute;right:7px;pointer-events:none;color:var(--text3)" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
     <div style="margin-left:auto;display:flex;gap:8px;">
@@ -811,7 +881,45 @@ function renderPayslip(){
       </button>
     </div>
   </div>
-  <div class="ps-grid">${cards}</div>`;
+  ${psLayout==='allweeks'
+    ? buildAllWeeksView(visible)
+    : psLayout==='fullpage'
+    ? buildFullPageView(visible,psWeek)
+    : `<div class="ps-grid">${cards}</div>`
+  }`;
+}
+
+function buildAllWeeksView(visible){
+  const parts=visible.map(emp=>{
+    const activeWks=WKS.filter(wk=>n2(emp.cells['pay_'+wk])>0||n2(emp.cells['ot_'+wk])>0||n2(emp.cells['allow_'+wk])>0||n2(emp.cells['hol_'+wk])>0);
+    if(!activeWks.length)return '';
+    const cards=activeWks.map((wk,wi)=>{
+      const br=wi<activeWks.length-1?'border-right:1px solid var(--border);':'';
+      return '<div style="'+br+'padding:12px;">'+buildPayslipCard(emp,wk)+'</div>';
+    }).join('');
+    return '<div style="background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);margin-bottom:24px;">'
+      +'<div style="padding:10px 16px;background:var(--blue-bg);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">'
+      +'<span style="font-size:12px;font-weight:800;color:var(--blue)">'+emp.name+'</span>'
+      +'<span style="font-size:10px;color:var(--text3);font-weight:600;">'+(emp._grp==='LITRAD'?'LITRAD INC.':'JVT CORPORATION')+' · '+curMonth+' '+curYear+'</span>'
+      +'</div>'
+      +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:0;">'+cards+'</div>'
+      +'</div>';
+  });
+  return '<div>'+parts.join('')+'</div>';
+}
+
+function buildFullPageView(visible,wk){
+  const parts=visible.map(emp=>{
+    return '<div style="background:#f8faff;border:1px solid var(--border);border-radius:10px;margin-bottom:16px;overflow:hidden;">'
+      +'<div style="padding:6px 14px;background:var(--blue-bg);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">'
+      +'<span style="font-size:11px;font-weight:700;color:var(--blue)">'+emp.name+'</span>'
+      +'<span style="font-size:10px;color:var(--text3)">'+curMonth+' '+curYear+' · '+wk+'</span>'
+      +'</div>'
+      +'<div style="padding:12px;display:flex;justify-content:center;">'
+      +'<div style="max-width:700px;width:100%">'+buildPayslipCard(emp,wk)+'</div>'
+      +'</div></div>';
+  });
+  return '<div>'+parts.join('')+'</div>';
 }
 
 function buildPayslipCard(emp,wk){
@@ -822,8 +930,19 @@ function buildPayslipCard(emp,wk){
   const pag=n2(emp.cells['pag_'+wk]),sssl=n2(emp.cells['sssl_'+wk]);
   const pagl=n2(emp.cells['pagl_'+wk]),abs=n2(emp.cells['abs_'+wk]);
   const totalEarn=pay+allow+ot+hol,totalDed=sss+ph+pag+sssl+pagl+abs,net=totalEarn-totalDed;
-  const earnRows=[[' Regular Pay',pay],['Allowance',allow],['Overtime Pay',ot],['Holiday Pay',hol]].filter(r=>r[1]>0).map(r=>`<tr><td class="ps-td-lbl">${r[0]}</td><td class="ps-td-amt">${P(r[1])}</td></tr>`).join('');
-  const dedRows=[['SSS',sss],['PhilHealth',ph],['Pag-IBIG',pag],['SSS Loan',sssl],['Pag-IBIG Loan',pagl],['Absences/Deds',abs]].filter(r=>r[1]>0).map(r=>`<tr><td class="ps-td-lbl">${r[0]}</td><td class="ps-td-amt">${P(r[1])}</td></tr>`).join('');
+  // Build unified row array — one td per side using flex for label+amount
+  const eArr=[[' Regular Pay',pay],['Allowance',allow],['Overtime Pay',ot],['Holiday Pay',hol]].filter(r=>r[1]>0);
+  const dArr=[['SSS',sss],['PhilHealth',ph],['Pag-IBIG',pag],['SSS Loan',sssl],['Pag-IBIG Loan',pagl],['Absences/Deds',abs]].filter(r=>r[1]>0);
+  const maxR=Math.max(eArr.length,dArr.length,1);
+  const tdRow=(lbl,amt,cls)=>`<td class="${cls}"><div style="display:flex;justify-content:space-between;align-items:center;"><span style="color:#222">${lbl}</span><span style="color:#555;font-weight:500">${amt}</span></div></td>`;
+  let unifiedRows='';
+  for(let i=0;i<maxR;i++){
+    const el=eArr[i]||null, dl=dArr[i]||null;
+    unifiedRows+=`<tr>
+      ${tdRow(el?el[0]:'', el?P(el[1]):'', 'ps-td-earn')}
+      ${tdRow(dl?dl[0]:'', dl?P(dl[1]):'', 'ps-td-ded')}
+    </tr>`;
+  }
   const empSafe=emp.name.replace(/'/g,"\\'");
   return `<div class="payslip-card">
   <div class="ps-header">
@@ -840,16 +959,17 @@ function buildPayslipCard(emp,wk){
     </div>
     <div class="ps-desc-label">Earnings &amp; Deductions</div>
     <div class="ps-tables-row">
-      <div class="ps-table-wrap">
-        <table class="ps-table"><thead><tr><th class="ps-th-earn" colspan="2">Earnings</th></tr></thead>
-        <tbody>${earnRows||'<tr><td class="ps-td-lbl" colspan="2" style="text-align:center;color:#ccc;font-size:9px;padding:6px">—</td></tr>'}</tbody>
-        <tfoot><tr class="ps-total-earn"><td>Total</td><td style="text-align:right">${P(totalEarn)}</td></tr></tfoot></table>
-      </div>
-      <div class="ps-table-wrap">
-        <table class="ps-table"><thead><tr><th class="ps-th-ded" colspan="2">Deductions</th></tr></thead>
-        <tbody>${dedRows||'<tr><td class="ps-td-lbl" colspan="2" style="text-align:center;color:#ccc;font-size:9px;padding:6px">—</td></tr>'}</tbody>
-        <tfoot><tr class="ps-total-ded"><td>Total</td><td style="text-align:right">${P(totalDed)}</td></tr></tfoot></table>
-      </div>
+      <table class="ps-table-unified">
+        <thead><tr>
+          <th class="ps-th-earn">Earnings</th>
+          <th class="ps-th-ded">Deductions</th>
+        </tr></thead>
+        <tbody>${unifiedRows}</tbody>
+        <tfoot><tr class="ps-total-unified">
+          <td><div style="display:flex;justify-content:space-between;"><span>Total</span><span>${P(totalEarn)}</span></div></td>
+          <td><div style="display:flex;justify-content:space-between;"><span>Total</span><span>${totalDed>0?P(totalDed):''}</span></div></td>
+        </tr></tfoot>
+      </table>
     </div>
     <div class="ps-net-box"><span class="ps-net-label">Net Pay</span><span class="ps-net-amt">PHP ${P(net)}</span></div>
     <div class="ps-words">${numToWords(net)}</div>
@@ -861,158 +981,300 @@ function buildPayslipCard(emp,wk){
 </div>`;
 }
 
+
+// ── Reusable payslip drawing helper ──
+function drawPayslipOnPage(doc,emp,wk,mx,my,mw,mh){
+  const meta=getEmpMeta(emp.name);
+  const pay=n2(emp.cells['pay_'+wk]),allow=n2(emp.cells['allow_'+wk]);
+  const ot=n2(emp.cells['ot_'+wk]),hol=n2(emp.cells['hol_'+wk]);
+  const sss=n2(emp.cells['sss_'+wk]),ph=n2(emp.cells['ph_'+wk]);
+  const pag=n2(emp.cells['pag_'+wk]),sssl=n2(emp.cells['sssl_'+wk]);
+  const pagl=n2(emp.cells['pagl_'+wk]),abs=n2(emp.cells['abs_'+wk]);
+  const totalEarn=pay+allow+ot+hol,totalDed=sss+ph+pag+sssl+pagl+abs,net=totalEarn-totalDed;
+  // Always 4 rows fixed (max possible earn items) — blank if empty
+  const eAll=[[' Regular Pay',pay],[' Allowance',allow],[' Overtime Pay',ot],[' Holiday Pay',hol]];
+  const dAll=[[' SSS',sss],[' PhilHealth',ph],[' Pag-IBIG',pag],[' SSS Loan',sssl],[' Pag-IBIG Loan',pagl],[' Absences',abs]];
+  const eF=eAll.filter(r=>r[1]>0), dF=dAll.filter(r=>r[1]>0);
+  const ROWS=Math.max(eF.length,dF.length,1); // dynamic but same both sides
+  const m=mx,cw=mw; let y=my;
+  const half=cw/2;
+
+  // Outer border
+  doc.setDrawColor(187,187,187);doc.setLineWidth(0.35);doc.rect(m,y,cw,mh||250,'S');
+
+  // ── HEADER — exact match to on-screen ──
+  // .ps-company: bold 14px
+  doc.setFont('helvetica','bold');doc.setFontSize(14);doc.setTextColor(17,17,17);
+  doc.text(emp._grp==='LITRAD'?'LITRAD INC.':'JVT CORPORATION',m+cw/2,y+10,{align:'center'});
+  // .ps-company-sub: bold 7px letter-spacing 2.5px
+  doc.setFont('helvetica','bold');doc.setFontSize(7);doc.setTextColor(51,51,51);
+  doc.setCharSpace(2.5);doc.text('PAYROLL SLIP',m+cw/2,y+15.5,{align:'center'});doc.setCharSpace(0);
+  // .ps-address: "PAYSLIP · MONTH YEAR · WEEK N" — includes PAYSLIP prefix like on screen
+  doc.setFont('helvetica','normal');doc.setFontSize(6.5);doc.setTextColor(85,85,85);
+  doc.text('PAYSLIP  \u00b7  '+curMonth+' '+curYear+'  \u00b7  WEEK '+(WKS.indexOf(wk)+1),m+cw/2,y+20,{align:'center'});
+  // border-bottom: 2px solid #111
+  doc.setDrawColor(17,17,17);doc.setLineWidth(0.7);doc.line(m,y+24,m+cw,y+24);
+  y+=28;
+
+  // ── EMPLOYEE DETAILS ──
+  doc.setFont('helvetica','normal');doc.setFontSize(6);doc.setTextColor(153,153,153);
+  doc.setCharSpace(2);doc.text('EMPLOYEE DETAILS',m+4,y+3.5);doc.setCharSpace(0);
+  doc.setDrawColor(221,221,221);doc.setLineWidth(0.15);doc.line(m,y+5,m+cw,y+5);
+  y+=9;
+  doc.setFont('helvetica','normal');doc.setFontSize(6);doc.setTextColor(153,153,153);
+  doc.text('NAME',m+4,y+3);doc.text('DESIGNATION',m+cw/3+4,y+3);doc.text('DEPARTMENT',m+cw*2/3+4,y+3);
+  doc.setFont('helvetica','bold');doc.setFontSize(9.5);doc.setTextColor(17,17,17);
+  doc.text(emp.name,m+4,y+9.5);doc.text(meta.designation,m+cw/3+4,y+9.5);doc.text(meta.department,m+cw*2/3+4,y+9.5);
+  doc.setDrawColor(187,187,187);doc.setLineWidth(0.2);doc.setLineDashPattern([1,1],0);
+  doc.line(m+cw/3+4,y+11,m+cw*2/3-2,y+11);doc.line(m+cw*2/3+4,y+11,m+cw-2,y+11);
+  doc.setLineDashPattern([],0);
+  y+=16;
+
+  // ── EARNINGS & DEDUCTIONS label ──
+  doc.setFont('helvetica','normal');doc.setFontSize(6);doc.setTextColor(153,153,153);
+  doc.setCharSpace(2);doc.text('EARNINGS & DEDUCTIONS',m+4,y+3.5);doc.setCharSpace(0);
+  doc.setDrawColor(221,221,221);doc.setLineWidth(0.15);doc.line(m,y+5,m+cw,y+5);
+  y+=9;
+
+  // ── TABLE — fixed ROWS count both sides ──
+  const ROW=6.5;
+  const tH=(1+ROWS+1)*ROW;
+  doc.setDrawColor(187,187,187);doc.setLineWidth(0.3);
+  doc.rect(m,y,cw,tH,'S');
+  doc.line(m+half,y,m+half,y+tH); // center divider
+
+  // Header row
+  doc.setFillColor(232,232,232);doc.rect(m,y,half,ROW,'F');doc.rect(m+half,y,half,ROW,'F');
+  doc.setFont('helvetica','bold');doc.setFontSize(7);doc.setTextColor(17,17,17);
+  doc.setCharSpace(0.5);
+  doc.text('EARNINGS',m+half/2,y+ROW-1.5,{align:'center'});
+  doc.text('DEDUCTIONS',m+half+half/2,y+ROW-1.5,{align:'center'});
+  doc.setCharSpace(0);
+  doc.setDrawColor(187,187,187);doc.setLineWidth(0.2);doc.line(m,y+ROW,m+cw,y+ROW);
+  y+=ROW;
+
+  // Data rows — SAME count each side, blank cells if no item
+  for(let i=0;i<ROWS;i++){
+    const er=eF[i]||null, dr=dF[i]||null;
+    doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(34,34,34);
+    if(er){doc.text(er[0],m+4,y+ROW-1.8);doc.text(P(er[1]),m+half-3,y+ROW-1.8,{align:'right'});}
+    if(dr){doc.text(dr[0],m+half+4,y+ROW-1.8);doc.text(P(dr[1]),m+cw-3,y+ROW-1.8,{align:'right'});}
+    doc.setDrawColor(235,235,235);doc.setLineWidth(0.1);
+    doc.line(m,y+ROW,m+cw,y+ROW);
+    y+=ROW;
+  }
+
+  // Total row
+  doc.setFillColor(232,232,232);doc.rect(m,y,cw,ROW,'F');
+  doc.setDrawColor(187,187,187);doc.setLineWidth(0.2);doc.line(m,y,m+cw,y);
+  doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(17,17,17);
+  doc.text('Total',m+4,y+ROW-1.8);doc.text(P(totalEarn),m+half-3,y+ROW-1.8,{align:'right'});
+  doc.text('Total',m+half+4,y+ROW-1.8);
+  if(totalDed>0)doc.text(P(totalDed),m+cw-3,y+ROW-1.8,{align:'right'});
+  y+=ROW+5;
+
+  // ── NET PAY ──
+  doc.setFillColor(17,17,17);doc.rect(m,y,cw,14,'F');
+  doc.setFont('helvetica','bold');doc.setFontSize(8.5);doc.setTextColor(255,255,255);
+  doc.setCharSpace(1);doc.text('NET PAY',m+5,y+9.5);doc.setCharSpace(0);
+  doc.setFontSize(14);doc.text('PHP '+P(net),m+cw-4,y+10,{align:'right'});
+  y+=18;
+
+  // ── WORDS ──
+  doc.setFillColor(245,245,245);doc.rect(m,y,cw,9,'F');
+  doc.setFillColor(153,153,153);doc.rect(m,y,3,9,'F');
+  doc.setFont('helvetica','italic');doc.setFontSize(7.5);doc.setTextColor(68,68,68);
+  doc.text(doc.splitTextToSize(numToWords(net),cw-14)[0]||'',m+6,y+6);
+  y+=14;
+
+  // ── SIGNATURES ──
+  doc.setDrawColor(204,204,204);doc.setLineWidth(0.2);doc.setLineDashPattern([1.5,1.5],0);
+  doc.line(m,y,m+cw,y);doc.setLineDashPattern([],0);
+  y+=6;
+  const s1=m+cw/4,s2=m+cw*3/4;
+  doc.setDrawColor(17,17,17);doc.setLineWidth(0.5);
+  doc.line(s1-28,y+10,s1+28,y+10);doc.line(s2-28,y+10,s2+28,y+10);
+  doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(17,17,17);
+  doc.text(emp.name,s1,y+15,{align:'center'});doc.text('AUTHORIZED SIGNATORY',s2,y+15,{align:'center'});
+  doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(119,119,119);
+  doc.text('Employee Signature',s1,y+19.5,{align:'center'});doc.text('Employer / HR',s2,y+19.5,{align:'center'});
+}
+
 function exportAllPayslipsPDF(){
   const mo=DB[curMonth];if(!mo)return;
   const{jsPDF}=window.jspdf;
-  const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
   const allEmps=[...mo.litrad.map(e=>({...e,_grp:'LITRAD'})),...mo.jvt.map(e=>({...e,_grp:'JVT'}))];
-  const visible=psGroup==='litrad'?allEmps.filter(e=>e._grp==='LITRAD'):psGroup==='jvt'?allEmps.filter(e=>e._grp==='JVT'):allEmps;
-  visible.forEach((emp,idx)=>{
-    if(idx>0)doc.addPage();
-    const wk=psWeek,meta=getEmpMeta(emp.name);
-    const pay=n2(emp.cells['pay_'+wk]),allow=n2(emp.cells['allow_'+wk]),ot=n2(emp.cells['ot_'+wk]),hol=n2(emp.cells['hol_'+wk]);
-    const sss=n2(emp.cells['sss_'+wk]),ph=n2(emp.cells['ph_'+wk]),pag=n2(emp.cells['pag_'+wk]);
-    const sssl=n2(emp.cells['sssl_'+wk]),pagl=n2(emp.cells['pagl_'+wk]),abs=n2(emp.cells['abs_'+wk]);
-    const totalEarn=pay+allow+ot+hol,totalDed=sss+ph+pag+sssl+pagl+abs,net=totalEarn-totalDed;
-    const pw=210,m=20,cw=pw-m*2;let y=m;
-    doc.setFillColor(255,255,255);doc.setDrawColor(17,17,17);doc.setLineWidth(0.5);doc.rect(m,y,cw,22);
-    doc.setFont('helvetica','bold');doc.setFontSize(13);doc.setTextColor(17,17,17);
-    doc.text(emp._grp==='LITRAD'?'LITRAD INC.':'JVT CORPORATION',pw/2,y+8,{align:'center'});
-    doc.setFontSize(8);doc.text('PAYROLL SLIP',pw/2,y+13,{align:'center'});
-    doc.setFont('helvetica','normal');doc.setFontSize(7);
-    doc.text('PAYSLIP - '+curMonth+' '+curYear+' - WEEK '+(WKS.indexOf(wk)+1),pw/2,y+18,{align:'center'});
-    y+=26;
-    doc.setFillColor(240,240,240);doc.rect(m,y,cw,7,'F');
-    doc.setFont('helvetica','bold');doc.setFontSize(7);doc.setTextColor(100,100,100);
-    doc.text('EMPLOYEE',m+3,y+5);doc.text('DESIGNATION',m+cw/3+3,y+5);doc.text('DEPARTMENT',m+cw*2/3+3,y+5);
-    y+=7;doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(17,17,17);
-    doc.text(emp.name,m+3,y+5);doc.text(meta.designation,m+cw/3+3,y+5);doc.text(meta.department,m+cw*2/3+3,y+5);y+=10;
-    const halfW=(cw-2)/2;
-    doc.setFillColor(232,232,232);doc.rect(m,y,halfW,7,'F');doc.rect(m+halfW+2,y,halfW,7,'F');
-    doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(17,17,17);
-    doc.text('EARNINGS',m+3,y+5);doc.text('DEDUCTIONS',m+halfW+5,y+5);y+=7;
-    const earnItems=[[' Regular Pay',pay],[' Allowance',allow],[' Overtime Pay',ot],[' Holiday Pay',hol]].filter(r=>r[1]>0);
-    const dedItems=[[' SSS',sss],[' PhilHealth',ph],[' Pag-IBIG',pag],[' SSS Loan',sssl],[' Pag-IBIG Loan',pagl],[' Absences',abs]].filter(r=>r[1]>0);
-    const maxRows=Math.max(earnItems.length,dedItems.length,1);
-    for(let i=0;i<maxRows;i++){
-      doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(34,34,34);
-      if(earnItems[i]){doc.text(earnItems[i][0],m+3,y+5);doc.text('PHP '+P(earnItems[i][1]),m+halfW-3,y+5,{align:'right'});}
-      if(dedItems[i]){doc.text(dedItems[i][0],m+halfW+5,y+5);doc.text('PHP '+P(dedItems[i][1]),m+cw-3,y+5,{align:'right'});}
-      doc.setDrawColor(230,230,230);doc.line(m,y+7,m+halfW,y+7);doc.line(m+halfW+2,y+7,m+cw,y+7);y+=7;
+  let visible=psGroup==='litrad'?allEmps.filter(e=>e._grp==='LITRAD'):psGroup==='jvt'?allEmps.filter(e=>e._grp==='JVT'):allEmps;
+  if(psEmployee!=='all')visible=visible.filter(e=>e.name===psEmployee);
+
+  if(psLayout==='fullpage'){
+    // Full page mode: 1 payslip centered per A4 page
+    const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    visible.forEach((emp,idx)=>{
+      if(idx>0)doc.addPage();
+      drawPayslipOnPage(doc,emp,psWeek,20,20,170,null);
+    });
+    doc.save('PAYSLIPS_'+curMonth+'_'+curYear+'_'+psWeek+'_FULLPAGE.pdf');
+    return;
+  }
+
+  if(psLayout==='allweeks'){
+    const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+    const PW=297,PH=210,MARGIN=7,GAP_COL=5,GAP_ROW=5;
+    const boxW=(PW-MARGIN*2-GAP_COL)/2; // ~139mm each
+
+    // drawWeekBox: draws one week payslip into exact bx,by,bw,bh box
+    function drawWeekBox(emp,wk,bx,by,bw,bh){
+      const meta=getEmpMeta(emp.name);
+      const pay=n2(emp.cells['pay_'+wk]),allow=n2(emp.cells['allow_'+wk]);
+      const ot=n2(emp.cells['ot_'+wk]),hol=n2(emp.cells['hol_'+wk]);
+      const sss=n2(emp.cells['sss_'+wk]),ph=n2(emp.cells['ph_'+wk]);
+      const pag=n2(emp.cells['pag_'+wk]),sssl=n2(emp.cells['sssl_'+wk]);
+      const pagl=n2(emp.cells['pagl_'+wk]),abs=n2(emp.cells['abs_'+wk]);
+      const totalEarn=pay+allow+ot+hol,totalDed=sss+ph+pag+sssl+pagl+abs,net=totalEarn-totalDed;
+      const eF=[[' Regular Pay',pay],[' Allowance',allow],[' Overtime Pay',ot],[' Holiday Pay',hol]].filter(r=>r[1]>0);
+      const dF=[[' SSS',sss],[' PhilHealth',ph],[' Pag-IBIG',pag],[' SSS Loan',sssl],[' Pag-IBIG Loan',pagl],[' Absences',abs]].filter(r=>r[1]>0);
+      const ROWS=Math.max(eF.length,dF.length,1);
+      const wkNum=WKS.indexOf(wk)+1;
+      const nm=emp.name.length>20?emp.name.slice(0,19)+'…':emp.name;
+      const half=bw/2;
+
+      // Fixed proportional heights
+      const HDR=13,EMP=12,EDL=5,THDR=5,TROW=5,TTOT=5,NET=11,WRD=7;
+      const usedH=HDR+EMP+EDL+THDR+(ROWS*TROW)+TTOT+NET+WRD;
+      const SIG=bh-usedH;
+
+      doc.setFillColor(255,255,255);doc.rect(bx,by,bw,bh,'F');
+      doc.setDrawColor(160,160,160);doc.setLineWidth(0.35);doc.rect(bx,by,bw,bh,'S');
+
+      let y=by;
+
+      // Header — includes PAYSLIP prefix matching on-screen
+      doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(17,17,17);
+      doc.text(emp._grp==='LITRAD'?'LITRAD INC.':'JVT CORPORATION',bx+bw/2,y+5.5,{align:'center'});
+      doc.setFont('helvetica','bold');doc.setFontSize(6);doc.setTextColor(51,51,51);
+      doc.setCharSpace(2);doc.text('PAYROLL SLIP',bx+bw/2,y+9,{align:'center'});doc.setCharSpace(0);
+      doc.setFont('helvetica','normal');doc.setFontSize(5.5);doc.setTextColor(85,85,85);
+      doc.text('PAYSLIP  ·  '+curMonth+' '+curYear+'  ·  WEEK '+wkNum,bx+bw/2,y+12.5,{align:'center'});
+      doc.setDrawColor(17,17,17);doc.setLineWidth(0.55);doc.line(bx,y+HDR,bx+bw,y+HDR);
+      y+=HDR;
+
+      // Employee info
+      doc.setFont('helvetica','normal');doc.setFontSize(5);doc.setTextColor(153,153,153);
+      doc.text('NAME',bx+3,y+2.5);doc.text('DESIGNATION',bx+bw/3+3,y+2.5);doc.text('DEPARTMENT',bx+bw*2/3+3,y+2.5);
+      doc.setFont('helvetica','bold');doc.setFontSize(7);doc.setTextColor(17,17,17);
+      doc.text(nm,bx+3,y+8.5);doc.text(meta.designation,bx+bw/3+3,y+8.5);doc.text(meta.department,bx+bw*2/3+3,y+8.5);
+      y+=EMP;
+
+      // E&D label
+      doc.setFont('helvetica','normal');doc.setFontSize(5);doc.setTextColor(153,153,153);
+      doc.setCharSpace(1.5);doc.text('EARNINGS & DEDUCTIONS',bx+3,y+3.5);doc.setCharSpace(0);
+      y+=EDL;
+
+      // Table
+      const tH=THDR+(ROWS*TROW)+TTOT;
+      doc.setDrawColor(175,175,175);doc.setLineWidth(0.2);
+      doc.rect(bx,y,bw,tH,'S');doc.line(bx+half,y,bx+half,y+tH);
+
+      // Header row
+      doc.setFillColor(232,232,232);doc.rect(bx,y,half,THDR,'F');doc.rect(bx+half,y,half,THDR,'F');
+      doc.setFont('helvetica','bold');doc.setFontSize(6);doc.setTextColor(17,17,17);
+      doc.setCharSpace(0.3);
+      doc.text('EARNINGS',bx+half/2,y+THDR-1.2,{align:'center'});
+      doc.text('DEDUCTIONS',bx+half+half/2,y+THDR-1.2,{align:'center'});
+      doc.setCharSpace(0);
+      doc.setDrawColor(175,175,175);doc.setLineWidth(0.15);doc.line(bx,y+THDR,bx+bw,y+THDR);
+      y+=THDR;
+
+      // Data rows — always ROWS count, blank if no item
+      for(let i=0;i<ROWS;i++){
+        const er=eF[i]||null,dr=dF[i]||null;
+        doc.setFont('helvetica','normal');doc.setFontSize(6.5);doc.setTextColor(34,34,34);
+        if(er){doc.text(er[0],bx+3,y+TROW-1.4);doc.text(P(er[1]),bx+half-2,y+TROW-1.4,{align:'right'});}
+        if(dr){doc.text(dr[0],bx+half+3,y+TROW-1.4);doc.text(P(dr[1]),bx+bw-2,y+TROW-1.4,{align:'right'});}
+        doc.setDrawColor(220,220,220);doc.setLineWidth(0.1);doc.line(bx,y+TROW,bx+bw,y+TROW);
+        y+=TROW;
+      }
+
+      // Total row
+      doc.setFillColor(232,232,232);doc.rect(bx,y,bw,TTOT,'F');
+      doc.setDrawColor(175,175,175);doc.setLineWidth(0.15);doc.line(bx,y,bx+bw,y);
+      doc.setFont('helvetica','bold');doc.setFontSize(6.5);doc.setTextColor(17,17,17);
+      doc.text('Total',bx+3,y+TTOT-1.4);doc.text(P(totalEarn),bx+half-2,y+TTOT-1.4,{align:'right'});
+      doc.text('Total',bx+half+3,y+TTOT-1.4);
+      if(totalDed>0)doc.text(P(totalDed),bx+bw-2,y+TTOT-1.4,{align:'right'});
+      y+=TTOT;
+
+      // NET PAY
+      doc.setFillColor(17,17,17);doc.rect(bx,y,bw,NET,'F');
+      doc.setFont('helvetica','bold');doc.setFontSize(7);doc.setTextColor(255,255,255);
+      doc.setCharSpace(0.8);doc.text('NET PAY',bx+4,y+7.5);doc.setCharSpace(0);
+      doc.setFontSize(9.5);doc.text('PHP '+P(net),bx+bw-3,y+7.5,{align:'right'});
+      y+=NET;
+
+      // Words
+      doc.setFillColor(245,245,245);doc.rect(bx,y,bw,WRD,'F');
+      doc.setFillColor(140,140,140);doc.rect(bx,y,2,WRD,'F');
+      doc.setFont('helvetica','italic');doc.setFontSize(5.5);doc.setTextColor(68,68,68);
+      const wds=numToWords(net);
+      doc.text(wds.length>70?wds.slice(0,69)+'…':wds,bx+4,y+5);
+      y+=WRD;
+
+      // Signatures — fills remaining space
+      const sigY=y+Math.max(SIG*0.4,3);
+      doc.setDrawColor(17,17,17);doc.setLineWidth(0.35);
+      doc.line(bx+bw/4-18,sigY+8,bx+bw/4+18,sigY+8);
+      doc.line(bx+bw*3/4-18,sigY+8,bx+bw*3/4+18,sigY+8);
+      doc.setFont('helvetica','bold');doc.setFontSize(5.5);doc.setTextColor(17,17,17);
+      doc.text(nm,bx+bw/4,sigY+12,{align:'center'});
+      doc.text('AUTHORIZED SIGNATORY',bx+bw*3/4,sigY+12,{align:'center'});
+      doc.setFont('helvetica','normal');doc.setFontSize(5);doc.setTextColor(119,119,119);
+      doc.text('Employee Signature',bx+bw/4,sigY+15.5,{align:'center'});
+      doc.text('Employer / HR',bx+bw*3/4,sigY+15.5,{align:'center'});
     }
-    doc.setFillColor(232,232,232);doc.rect(m,y,halfW,7,'F');doc.rect(m+halfW+2,y,halfW,7,'F');
-    doc.setFont('helvetica','bold');doc.setFontSize(8.5);doc.setTextColor(17,17,17);
-    doc.text('Total Earnings',m+3,y+5);doc.text('PHP '+P(totalEarn),m+halfW-3,y+5,{align:'right'});
-    doc.text('Total Deductions',m+halfW+5,y+5);doc.text('PHP '+P(totalDed),m+cw-3,y+5,{align:'right'});y+=11;
-    doc.setFillColor(17,17,17);doc.rect(m,y,cw,12,'F');
-    doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(255,255,255);
-    doc.text('NET PAY',m+4,y+8);doc.setFontSize(14);doc.text('PHP '+P(net),m+cw-3,y+8.5,{align:'right'});y+=16;
-    doc.setFillColor(245,245,245);doc.rect(m,y,cw,8,'F');
-    doc.setFont('helvetica','italic');doc.setFontSize(7.5);doc.setTextColor(68,68,68);
-    doc.text(numToWords(net),m+3,y+5.5);y+=12;
-    doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(17,17,17);doc.setDrawColor(17,17,17);doc.setLineWidth(0.3);
-    const sig1x=m+cw/4,sig2x=m+cw*3/4;
-    doc.line(sig1x-30,y+14,sig1x+30,y+14);doc.line(sig2x-30,y+14,sig2x+30,y+14);
-    doc.setFont('helvetica','bold');doc.text(emp.name,sig1x,y+18,{align:'center'});doc.text('AUTHORIZED SIGNATORY',sig2x,y+18,{align:'center'});
-    doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(100,100,100);
-    doc.text('Employee Signature',sig1x,y+22,{align:'center'});doc.text('Employer / HR',sig2x,y+22,{align:'center'});
-  });
-  doc.save('PAYSLIPS_'+curMonth+'_'+curYear+'_'+psWeek+'.pdf');
-}
 
-function updateSbar(){
-  if(!curMonth||!DB[curMonth])return;
-  const{litrad,jvt}=DB[curMonth];
-  const gn=e=>WKS.reduce((s,w)=>s+calcNet(e,w),0);
-  const ln=litrad.reduce((s,e)=>s+gn(e),0),jn=jvt.reduce((s,e)=>s+gn(e),0);
-  document.getElementById('sb-m').textContent=curMonth;
-  document.getElementById('sb-l').textContent=PF(ln);
-  document.getElementById('sb-j').textContent=PF(jn);
-  document.getElementById('sb-t').textContent=PF(ln+jn);
-}
-
-function toggleGroup(id,btn){document.getElementById(id).classList.toggle('hidden');btn.classList.toggle('collapsed');}
-
-function openNewMonth(){document.getElementById('nm-inp').value='';openModal('m-new');setTimeout(()=>document.getElementById('nm-inp').focus(),60);}
-function confirmNewMonth(){
-  let name=document.getElementById('nm-inp').value.trim().toUpperCase();
-  if(!name)return;if(DB[name]){alert('Month already exists!');return;}
-  const months=Object.keys(DB).filter(k=>k!=='_empMeta');
-  const last=months.length?DB[months[months.length-1]]:null;
-  const clr=['ot','hol','abs','sssl','pagl'];
-  const cloneGrp=emps=>emps.map(e=>{const ne=mkEmp(e.name,{},e.workDays||6);SECTIONS.forEach(s=>WKS.forEach(w=>{const k=s.k+'_'+w;ne.cells[k]=clr.includes(s.k)?'':e.cells[k];}));WKS.forEach(w=>{DAYS.forEach(d=>{ne.ot[w][d]='';});});return ne;});
-  DB[name]=last?{litrad:cloneGrp(last.litrad),jvt:cloneGrp(last.jvt),leaves:[]}:seedFeb();
-  curMonth=name;otWkIdx=0;save();renderAll();closeModal('m-new');
-}
-function askDeleteMonth(){
-  if(Object.keys(DB).filter(k=>k!=='_empMeta').length<=1){alert('Cannot delete the only month.');return;}
-  openConfirm(`Delete "${curMonth}"?`,`All payroll, OT, and leave data for ${curMonth} will be deleted.`,()=>{
-    delete DB[curMonth];
-    const s=Object.keys(DB).filter(k=>k!=='_empMeta').sort((a,b)=>{const ai=MO.indexOf(a),bi=MO.indexOf(b);return(ai<0?99:ai)-(bi<0?99:bi);});
-    curMonth=s[0]||'';save();renderAll();
-  });
-}
-
-function openAddEmp(g){pendingGroup=g;document.getElementById('emp-inp').value='';document.getElementById('emp-days').value='6';document.getElementById('m-emp-title').textContent=`Add Employee — ${g.toUpperCase()}`;openModal('m-emp');setTimeout(()=>document.getElementById('emp-inp').focus(),60);}
-function confirmAddEmp(){const name=document.getElementById('emp-inp').value.trim().toUpperCase();const wd=parseInt(document.getElementById('emp-days').value)||6;if(!name)return;DB[curMonth][pendingGroup].push(mkEmp(name,{},wd));save();renderPayroll();updateSbar();closeModal('m-emp');}
-function askDelEmp(g,i){const name=DB[curMonth][g][i].name;openConfirm(`Remove "${name}"?`,`Remove from ${g.toUpperCase()} for ${curMonth}?`,()=>{DB[curMonth][g].splice(i,1);save();renderPayroll();updateSbar();});}
-
-
-// ══════════════════════════════════════════════════
-// MONTHLY SUMMARY PDF EXPORT
-// ══════════════════════════════════════════════════
-
-let summaryPdfMode = 'monthly';
-let summaryPdfLayout = 'separate'; // 'separate' | 'combined'
-
-function setSummaryPdfMode(mode){
-  summaryPdfMode = mode;
-  const mb = document.getElementById('pdf-opt-monthly');
-  const wb = document.getElementById('pdf-opt-weekly');
-  const wp = document.getElementById('week-picker');
-  const lp = document.getElementById('layout-picker');
-  if(!mb||!wb||!wp) return;
-  if(mode==='monthly'){
-    mb.style.background='var(--blue)'; mb.style.color='#fff';
-    wb.style.background='var(--white)'; wb.style.color='var(--text2)';
-    wp.style.display='none';
-    if(lp) lp.style.display='none';
-  } else {
-    wb.style.background='var(--blue)'; wb.style.color='#fff';
-    mb.style.background='var(--white)'; mb.style.color='var(--text2)';
-    wp.style.display='flex';
-    if(lp){ lp.style.display='flex'; setSummaryPdfLayout(summaryPdfLayout); }
+    // ── Layout: 2 boxes per row, weeks stacked ──
+    visible.forEach((emp,empIdx)=>{
+      if(empIdx>0)doc.addPage();
+      const activeWks=WKS.filter(wk=>
+        n2(emp.cells['pay_'+wk])>0||n2(emp.cells['ot_'+wk])>0||
+        n2(emp.cells['allow_'+wk])>0||n2(emp.cells['hol_'+wk])>0
+      );
+      if(!activeWks.length)activeWks.push('W1');
+      const totalRows=Math.ceil(activeWks.length/2);
+      const boxH=(PH-MARGIN*2-(totalRows-1)*GAP_ROW)/totalRows;
+      activeWks.forEach((wk,wi)=>{
+        const row=Math.floor(wi/2);
+        const col=wi%2;
+        const bx=MARGIN+col*(boxW+GAP_COL);
+        const by=MARGIN+row*(boxH+GAP_ROW);
+        drawWeekBox(emp,wk,bx,by,boxW,boxH);
+      });
+    });
+    const fname=visible.length===1
+      ?'PAYSLIP_'+visible[0].name.replace(/[,\s]+/g,'_')+'_'+curMonth+'_'+curYear+'.pdf'
+      :'PAYSLIPS_ALL_WEEKS_'+curMonth+'_'+curYear+'.pdf';
+    doc.save(fname);
+    return;
   }
-}
 
-function setSummaryPdfLayout(layout){
-  summaryPdfLayout = layout;
-  const sb = document.getElementById('pdf-layout-sep');
-  const cb = document.getElementById('pdf-layout-comb');
-  if(!sb||!cb) return;
-  if(layout==='separate'){
-    sb.style.background='var(--blue)'; sb.style.color='#fff';
-    cb.style.background='var(--white)'; cb.style.color='var(--text2)';
-  } else {
-    cb.style.background='var(--blue)'; cb.style.color='#fff';
-    sb.style.background='var(--white)'; sb.style.color='var(--text2)';
-  }
-}
-
-function doExportSummaryPDF(){
-  if(summaryPdfMode==='monthly'){
-    exportMonthlySummaryPDF();
-  } else {
-    const sel = document.getElementById('summary-week-sel');
-    const wk = sel ? sel.value : 'W1';
-    exportWeeklyBreakdownPDF(wk);
+  // Grid mode: 2 payslips per A4 page portrait
+  if(psLayout==='grid'){
+    const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    const PW=210,PH=297,m=10,cw=PW-m*2;
+    const slipH=130;
+    visible.forEach((emp,idx)=>{
+      const pageIdx=Math.floor(idx/2);
+      if(idx%2===0 && idx>0)doc.addPage();
+      const yOff=m+(idx%2)*(slipH+8);
+      drawPayslipOnPage(doc,emp,psWeek,m,yOff,cw,slipH);
+    });
+    doc.save('PAYSLIPS_'+curMonth+'_'+curYear+'.pdf');
+    return;
   }
 }
 
 
-// ══════════════════════════════════════════════════
-// MONTHLY TOTALS SUMMARY PDF
-// ══════════════════════════════════════════════════
 function exportMonthlySummaryPDF(){
   const mo=DB[curMonth];if(!mo)return;
   const{jsPDF}=window.jspdf;
@@ -1020,479 +1282,340 @@ function exportMonthlySummaryPDF(){
   const pw=297,ph=210,m=10,cw=pw-m*2;
 
   const mSum=(emp,keys)=>WKS.reduce((s,w)=>s+keys.reduce((ss,k)=>ss+n2(emp.cells[k+'_'+w]),0),0);
-  const gSum=(emps,keys)=>emps.reduce((s,e)=>s+mSum(e,keys),0);
 
-  function drawGroup(emps, groupName, companyName, startY){
+  function drawGroup(emps,grp,companyName,startY){
     const filtered=emps.filter(e=>!WEEKLY_EXCL.includes(e.name));
     let y=startY;
+    const barClr=grp==='litrad'?[26,79,207]:[6,95,70];
 
-    const barClr = groupName==='litrad'?[26,79,207]:[6,95,70];
+    // Group header bar
     doc.setFillColor(...barClr);doc.rect(m,y,cw,8,'F');
     doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(255,255,255);
-    doc.text(companyName+' — MONTHLY SUMMARY',m+3,y+5.5);
-    doc.setFont('helvetica','normal');doc.setFontSize(7);
-    doc.text(curMonth+' '+curYear+' · '+filtered.length+' employees',pw-m-3,y+5.5,{align:'right'});
-    y+=8;
+    doc.text(companyName,m+4,y+5.5);
+    doc.text(curMonth+' '+curYear+' — MONTHLY SUMMARY',pw-m-4,y+5.5,{align:'right'});
+    y+=10;
 
-    const cols=[
-      {label:'EMPLOYEE',     w:42, align:'left',  color:[28,35,64]},
-      {label:'REGULAR PAY',  w:20, align:'right',  color:[146,64,14]},
-      {label:'ALLOWANCE',    w:18, align:'right',  color:[146,64,14]},
-      {label:'OVERTIME PAY', w:20, align:'right',  color:[146,64,14]},
-      {label:'HOLIDAY PAY',  w:17, align:'right',  color:[146,64,14]},
-      {label:'TOTAL INC',    w:21, align:'right',  color:[180,83,9], bold:true, bg:[255,253,240]},
-      {label:'SSS',          w:14, align:'right',  color:[126,34,206]},
-      {label:'PHILHEALTH',   w:17, align:'right',  color:[3,105,161]},
-      {label:'PAG-IBIG',     w:15, align:'right',  color:[4,120,87]},
-      {label:'SSS LOAN',     w:16, align:'right',  color:[153,27,27]},
-      {label:'PAGIBIG LN',   w:16, align:'right',  color:[185,28,28]},
-      {label:'CA/ABS',       w:14, align:'right',  color:[180,83,9]},
-      {label:'TOTAL DED',    w:20, align:'right',  color:[153,27,27], bold:true, bg:[255,242,242]},
-      {label:'NET PAY',      w:23, align:'right',  color:[6,95,70],   bold:true, bg:[209,250,229]},
-    ];
-
-    const incSpan=cols.slice(1,6).reduce((s,c)=>s+c.w,0);
-    const dedSpan=cols.slice(6,13).reduce((s,c)=>s+c.w,0);
-    let x=m+cols[0].w;
-    doc.setFillColor(255,251,235);doc.rect(x,y,incSpan,4,'F');
-    doc.setFont('helvetica','bold');doc.setFontSize(5.5);doc.setTextColor(146,64,14);
-    doc.text('INCOME',x+incSpan/2,y+3,{align:'center'});x+=incSpan;
-    doc.setFillColor(253,244,255);doc.rect(x,y,dedSpan,4,'F');
-    doc.setFont('helvetica','bold');doc.setFontSize(5.5);doc.setTextColor(126,34,206);
-    doc.text('CONTRIBUTIONS / DEDUCTIONS',x+dedSpan/2,y+3,{align:'center'});x+=dedSpan;
-    doc.setFillColor(209,250,229);doc.rect(x,y,cols[13].w,4,'F');
-    doc.setFont('helvetica','bold');doc.setFontSize(5.5);doc.setTextColor(6,95,70);
-    doc.text('NET PAY',x+cols[13].w/2,y+3,{align:'center'});
-    y+=4;
-
-    x=m;
-    cols.forEach(col=>{
-      doc.setFillColor(...(col.bg||[248,250,255]));
-      doc.setDrawColor(200,210,230);doc.setLineWidth(0.2);doc.rect(x,y,col.w,5.5,'FD');
-      doc.setFont('helvetica','bold');doc.setFontSize(5.5);doc.setTextColor(...col.color);
-      doc.text(col.label,col.align==='right'?x+col.w-1.5:x+1.5,y+3.8,{align:col.align==='right'?'right':'left'});
-      x+=col.w;
-    });
-    y+=5.5;
-
-    const ROW_H=5.5;
-    filtered.forEach((emp,ri)=>{
-      const pay=mSum(emp,['pay']),allow=mSum(emp,['allow']),ot=mSum(emp,['ot']),hol=mSum(emp,['hol']),incTot=pay+allow+ot+hol;
-      const sss=mSum(emp,['sss']),ph=mSum(emp,['ph']),pag=mSum(emp,['pag']);
-      const sssl=mSum(emp,['sssl']),pagl=mSum(emp,['pagl']),abs=mSum(emp,['abs']);
-      const dedTot=sss+ph+pag+sssl+pagl+abs,net=incTot-dedTot;
-      const vals=[emp.name,pay,allow,ot,hol,incTot,sss,ph,pag,sssl,pagl,abs,dedTot,net];
-      x=m;
-      doc.setFillColor(ri%2===0?252:255,ri%2===0?253:255,255);
-      doc.rect(m,y,cw,ROW_H,'F');
-      cols.forEach((col,ci)=>{
-        doc.setDrawColor(220,225,240);doc.setLineWidth(0.1);doc.rect(x,y,col.w,ROW_H,'S');
-        const val=vals[ci];
-        if(ci===0){
-          doc.setFont('helvetica','bold');doc.setFontSize(6.5);doc.setTextColor(28,35,64);
-          const nm=String(val);doc.text(nm.length>21?nm.slice(0,20)+'…':nm,x+1.5,y+3.8);
-        } else {
-          const num=n2(val);
-          doc.setFont('helvetica',col.bold?'bold':'normal');
-          doc.setFontSize(col.bold?7:6.5);doc.setTextColor(...col.color);
-          doc.text(num?P(num):'-',x+col.w-1.5,y+3.8,{align:'right'});
-        }
-        x+=col.w;
-      });
-      y+=ROW_H;
-    });
-
-    const fp=gSum(filtered,['pay']),fa=gSum(filtered,['allow']),fo=gSum(filtered,['ot']),fh=gSum(filtered,['hol']),fi=fp+fa+fo+fh;
-    const fss=gSum(filtered,['sss']),fph=gSum(filtered,['ph']),fpg=gSum(filtered,['pag']);
-    const fsl=gSum(filtered,['sssl']),fpl=gSum(filtered,['pagl']),fab=gSum(filtered,['abs']);
-    const fd=fss+fph+fpg+fsl+fpl+fab,fn=fi-fd;
-    const ftVals=['TOTAL',fp,fa,fo,fh,fi,fss,fph,fpg,fsl,fpl,fab,fd,fn];
-    x=m;doc.setFillColor(240,244,252);doc.rect(m,y,cw,6,'F');
+    // Column headers
+    const colW=[50,25,25,25,20,20,20,20,20,22,22];
+    const cols=['EMPLOYEE','REG PAY','ALLOWANCE','OT PAY','HOL PAY','SSS','PHILHEALTH','PAG-IBIG','SSS LOAN','TOTAL EARN','NET PAY'];
+    let x=m;
+    doc.setFillColor(232,232,232);doc.rect(m,y,cw,7,'F');
+    doc.setFont('helvetica','bold');doc.setFontSize(6.5);doc.setTextColor(17,17,17);
     cols.forEach((col,ci)=>{
-      doc.setDrawColor(180,190,215);doc.setLineWidth(0.25);doc.rect(x,y,col.w,6,'S');
-      if(ci===0){doc.setFont('helvetica','bold');doc.setFontSize(6.5);doc.setTextColor(90,100,140);doc.text('TOTAL',x+1.5,y+4);}
-      else{const num=n2(ftVals[ci]);doc.setFont('helvetica','bold');doc.setFontSize(col.bold?7:6.5);doc.setTextColor(...col.color);doc.text(num?P(num):'-',x+col.w-1.5,y+4,{align:'right'});}
-      x+=col.w;
+      doc.text(col,x+2,y+5,ci>0?{align:'center'}:{});
+      if(ci>0)doc.setDrawColor(200,200,200),doc.setLineWidth(0.1),doc.line(x,y,x,y+7);
+      x+=colW[ci];
     });
-    return y+6;
+    doc.setDrawColor(180,180,180);doc.setLineWidth(0.2);doc.line(m,y+7,m+cw,y+7);
+    y+=7;
+
+    // Data rows
+    filtered.forEach((emp,ri)=>{
+      if(ri%2===0){doc.setFillColor(248,248,248);doc.rect(m,y,cw,5.5,'F');}
+      doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(17,17,17);
+      const vals=[
+        emp.name,
+        mSum(emp,['pay']),mSum(emp,['allow']),mSum(emp,['ot']),mSum(emp,['hol']),
+        mSum(emp,['sss']),mSum(emp,['ph']),mSum(emp,['pag']),mSum(emp,['sssl']),
+        mSum(emp,['pay','allow','ot','hol']),
+        mSum(emp,['pay','allow','ot','hol'])-mSum(emp,['sss','ph','pag','sssl','pagl','abs'])
+      ];
+      x=m;
+      vals.forEach((v,vi)=>{
+        const txt=vi===0?v:(n2(v)>0?P(v):'\u2014');
+        if(vi===0)doc.text(txt,x+2,y+4,{maxWidth:colW[0]-3});
+        else doc.text(txt,x+colW[vi]/2,y+4,{align:'center'});
+        if(vi>0)doc.setDrawColor(220,220,220),doc.setLineWidth(0.1),doc.line(x,y,x,y+5.5);
+        x+=colW[vi];
+      });
+      doc.setDrawColor(235,235,235);doc.setLineWidth(0.1);doc.line(m,y+5.5,m+cw,y+5.5);
+      y+=5.5;
+    });
+
+    // Totals row
+    doc.setFillColor(232,232,232);doc.rect(m,y,cw,6,'F');
+    doc.setFont('helvetica','bold');doc.setFontSize(7);doc.setTextColor(17,17,17);
+    doc.text('TOTAL',m+2,y+4.5);
+    x=m+colW[0];
+    [mSum(filtered.reduce((a,e)=>{const r={cells:{}};WKS.forEach(w=>{['pay','allow','ot','hol','sss','ph','pag','sssl','pagl','abs'].forEach(k=>{r.cells[k+'_'+w]=(n2(a.cells&&a.cells[k+'_'+w]||0))+(n2(e.cells[k+'_'+w]||0));})});return r;},{cells:{}}),['pay']),
+     mSum,mSum,mSum,mSum,mSum,mSum,mSum].forEach(()=>{});
+    // simplified: sum each column
+    const totals=colW.slice(1).map((_,ci)=>{
+      const keys=[['pay'],['allow'],['ot'],['hol'],['sss'],['ph'],['pag'],['sssl'],
+                  ['pay','allow','ot','hol'],
+                  ['pay','allow','ot','hol']];
+      const deducKeys=['sss','ph','pag','sssl','pagl','abs'];
+      if(ci===9) return filtered.reduce((s,e)=>s+mSum(e,['pay','allow','ot','hol'])-mSum(e,deducKeys),0);
+      return filtered.reduce((s,e)=>s+mSum(e,keys[ci]),0);
+    });
+    totals.forEach((v,vi)=>{
+      doc.text(P(v),x+colW[vi+1]/2,y+4.5,{align:'center'});
+      doc.setDrawColor(200,200,200);doc.setLineWidth(0.1);doc.line(x,y,x,y+6);
+      x+=colW[vi+1];
+    });
+    doc.setDrawColor(180,180,180);doc.setLineWidth(0.2);doc.line(m,y,m+cw,y);
+    y+=6;
+    return y;
   }
 
   let y=m;
-  doc.setFillColor(26,79,207);doc.rect(m,y,cw,9,'F');
-  doc.setFont('helvetica','bold');doc.setFontSize(11);doc.setTextColor(255,255,255);
-  doc.text('MONTHLY PAYROLL SUMMARY — '+curMonth+' '+curYear,pw/2,y+6.2,{align:'center'});
-  y+=13;
-
   y=drawGroup(mo.litrad,'litrad','LITRAD INC.',y)+4;
-
   const jvtCount=mo.jvt.filter(e=>!WEEKLY_EXCL.includes(e.name)).length;
-  if(y+(jvtCount*5.5+40)>ph-m){doc.addPage();y=m;}
+  if(y+jvtCount*5.5+40>ph-m){doc.addPage();y=m;}
   drawGroup(mo.jvt,'jvt','JVT CORPORATION',y);
-
-  const tp=doc.getNumberOfPages();
-  for(let p=1;p<=tp;p++){
-    doc.setPage(p);doc.setFont('helvetica','normal');doc.setFontSize(6);doc.setTextColor(160,160,160);
-    doc.text('Generated: '+new Date().toLocaleDateString('en-PH'),m,ph-4);
-    doc.text('CONFIDENTIAL — For Internal Use Only',pw/2,ph-4,{align:'center'});
-    doc.text('Page '+p+' of '+tp,pw-m,ph-4,{align:'right'});
-  }
   doc.save('MONTHLY_SUMMARY_'+curMonth+'_'+curYear+'.pdf');
 }
 
-// ══════════════════════════════════════════════════
-// ══════════════════════════════════════════════════
-// WEEKLY BREAKDOWN PDF  —  Redesigned with per-day OT
-// ══════════════════════════════════════════════════
-function exportWeeklyBreakdownPDF(selectedWk){
-  const mo=DB[curMonth]; if(!mo) return;
-  const {jsPDF}=window.jspdf;
-  const isCombined = summaryPdfLayout==='combined';
-  const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
-  const PW=297,PH=210,M=8,CW=281; // CW = PW - M*2
 
-  const wkIdx=WKS.indexOf(selectedWk||'W1');
-  const wk=WKS[wkIdx];
-  const wkDates=getWeekDates(wkIdx);
-  const wkLabel='WEEK '+(wkIdx+1)+' ('+wk+') — '+curMonth+' '+curYear;
+function exportWeeklyBreakdownPDF(selectedWk, layout){
+  const mo=DB[curMonth];if(!mo)return;
+  const{jsPDF}=window.jspdf;
 
-  // ── col widths — total must equal CW=281 ──
-  // emp=38,pay=17,allow=14, 7xday=9each=63, othrs=12,otpay=17,hol=14,
-  // sss=12,ph=14,pag=11,sssl=12,pagl=12,abs=11,dedtot=15,net=19  => 281
-  const W={emp:38,pay:17,allow:14,day:9,othrs:12,otpay:17,hol:14,
-           sss:12,ph:14,pag:11,sssl:12,pagl:12,abs:11,dedtot:15,net:19};
+  // Column definitions — earnings | per-day OT | deductions | totals
+  const DAY_COLS=DAYS; // ['Thu','Fri','Sat','Sun','Mon','Tue','Wed']
+  const colDefs=[
+    {key:'name',   label:'EMPLOYEE',   w:46, align:'left'},
+    {key:'pay',    label:'REG PAY',    w:22, align:'right'},
+    {key:'allow',  label:'ALLOW',      w:18, align:'right'},
+    // per-day OT hrs — added dynamically
+    ...DAY_COLS.map(d=>({key:'ot_'+d, label:d.toUpperCase(), w:12, align:'center', isOT:true})),
+    {key:'ot_total',label:'OT HRS',   w:14, align:'center'},
+    {key:'ot_pay', label:'OT PAY',    w:22, align:'right'},
+    {key:'hol',    label:'HOL',       w:16, align:'right'},
+    {key:'sss',    label:'SSS',       w:16, align:'right'},
+    {key:'ph',     label:'PhilHlth',  w:16, align:'right'},
+    {key:'pag',    label:'Pag-IBIG',  w:16, align:'right'},
+    {key:'sssl',   label:'SSS Loan',  w:16, align:'right'},
+    {key:'abs',    label:'ABS/DED',   w:16, align:'right'},
+    {key:'earn',   label:'TOTAL EARN',w:24, align:'right'},
+    {key:'net',    label:'NET PAY',   w:24, align:'right'},
+  ];
+  // Total width check — scale if needed
+  const totalColW=colDefs.reduce((s,c)=>s+c.w,0);
+  const PW=297,PH=210,M=8,availW=PW-M*2;
+  const scale=availW/totalColW;
+  const cols=colDefs.map(cd=>({...cd,w:cd.w*scale}));
 
-  // build column array with pre-computed x positions
-  function buildCols(){
-    const cols=[];
-    let x=M;
-    const add=(key,label,w,clr,bg,bold)=>{
-      cols.push({key,label,w,x,clr:clr||[50,60,90],bg:bg||[248,250,255],bold:!!bold});
-      x+=w;
+  // Build row data for one employee
+  function empRow(emp){
+    const wk=selectedWk;
+    const pay=n2(emp.cells['pay_'+wk]),allow=n2(emp.cells['allow_'+wk]);
+    const hol=n2(emp.cells['hol_'+wk]);
+    const sss=n2(emp.cells['sss_'+wk]),ph=n2(emp.cells['ph_'+wk]);
+    const pag=n2(emp.cells['pag_'+wk]),sssl=n2(emp.cells['sssl_'+wk]);
+    const pagl=n2(emp.cells['pagl_'+wk]),abs=n2(emp.cells['abs_'+wk]);
+    const otHrsByDay=DAY_COLS.map(d=>n2(emp.ot?.[wk]?.[d]));
+    const otHrsTotal=otHrsByDay.reduce((s,v)=>s+v,0);
+    const otPay=n2(emp.cells['ot_'+wk]);
+    const earn=pay+allow+otPay+hol;
+    const ded=sss+ph+pag+sssl+pagl+abs;
+    return {
+      name:emp.name, pay,allow,
+      ...Object.fromEntries(DAY_COLS.map((d,i)=>['ot_'+d, otHrsByDay[i]])),
+      ot_total:otHrsTotal, ot_pay:otPay, hol,
+      sss,ph,pag,sssl,abs:abs+pagl,
+      earn, net:earn-ded
     };
-    add('name','EMPLOYEE',W.emp,[20,30,70],[243,246,255]);
-    add('pay','REG PAY',W.pay,[40,70,160],[235,241,255]);
-    add('allow','ALLOW',W.allow,[40,70,160],[235,241,255]);
-    DAYS.forEach((d,di)=>{
-      const lbl=d+'\n'+(wkDates[di]?wkDates[di].date:'');
-      add('ot_'+d,lbl,W.day,[160,80,5],[255,248,235]);
-    });
-    add('otHrs','OT HRS',W.othrs,[160,80,5],[255,243,220],true);
-    add('otPay','OT PAY',W.otpay,[120,55,5],[255,237,200],true);
-    add('hol','HOLIDAY',W.hol,[30,100,55],[235,250,240]);
-    add('sss','SSS',W.sss,[140,25,25],[255,240,240]);
-    add('ph','PHILHEALTH',W.ph,[10,90,155],[235,248,255]);
-    add('pag','PAG-IBIG',W.pag,[5,110,75],[235,252,244]);
-    add('sssl','SSS LN',W.sssl,[150,25,25],[255,238,238]);
-    add('pagl','PAGIBIG LN',W.pagl,[160,25,25],[255,235,235]);
-    add('abs','CA/ABS',W.abs,[155,80,5],[255,248,230]);
-    add('dedTot','TOTAL DED',W.dedtot,[150,20,20],[255,228,228],true);
-    add('net','NET PAY',W.net,[5,100,55],[215,250,230],true);
-    return cols;
   }
 
-  function drawGroup(emps,groupName,companyName,startY,maxH){
+  // Draw one section (one company) starting at y
+  function drawSection(doc,emps,companyName,grp,startY){
     const filtered=emps.filter(e=>!WEEKLY_EXCL.includes(e.name));
-    const COLS=buildCols();
-    const isLitrad=groupName==='litrad';
+    if(!filtered.length)return startY;
     let y=startY;
+    const barClr=grp==='litrad'?[26,79,207]:[6,95,70];
+    const HEADER_H=8, COL_H=6.5, ROW_H=5.5, FOOT_H=6.5;
 
-    // ── Banner ──
-    const BH=10;
-    const bannerClr=isLitrad?[15,55,185]:[4,80,55];
-    const accentClr=isLitrad?[90,130,255]:[50,190,130];
-    doc.setFillColor(...bannerClr); doc.rect(M,y,CW,BH,'F');
-    doc.setFillColor(...accentClr); doc.rect(M,y,3,BH,'F');
-    doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(255,255,255);
-    doc.text(companyName, M+6, y+6.5);
-    doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(...accentClr);
-    doc.text(wkLabel, PW-M-2, y+4, {align:'right'});
-    doc.setFont('helvetica','normal'); doc.setFontSize(6); doc.setTextColor(190,205,255);
-    doc.text(filtered.length+' employees', PW-M-2, y+8.5, {align:'right'});
-    y+=BH;
+    // ── Company header bar ──
+    doc.setFillColor(...barClr);doc.rect(M,y,availW,HEADER_H,'F');
+    doc.setFont('helvetica','bold');doc.setFontSize(8.5);doc.setTextColor(255,255,255);
+    doc.text(companyName,M+4,y+5.5);
+    doc.setCharSpace(0.3);
+    doc.text(curMonth+' '+curYear+'  \u2014  WEEK '+selectedWk+' PAYROLL',PW-M-4,y+5.5,{align:'right'});
+    doc.setCharSpace(0);
+    y+=HEADER_H;
 
-    // ── Span header row ──
-    const SH=4.5;
-    // Income span: pay,allow,7 day cols,othrs,otpay,hol
-    const incKeys=['pay','allow',...DAYS.map(d=>'ot_'+d),'otHrs','otPay','hol'];
-    const incCols=COLS.filter(c=>incKeys.includes(c.key));
-    const incX=incCols[0].x, incW=incCols.reduce((s,c)=>s+c.w,0);
-    doc.setFillColor(255,246,220); doc.rect(incX,y,incW,SH,'F');
-    doc.setFont('helvetica','bold'); doc.setFontSize(5.5); doc.setTextColor(150,75,5);
-    doc.text('INCOME & OVERTIME',incX+incW/2,y+3.2,{align:'center'});
-
-    const dedKeys=['sss','ph','pag','sssl','pagl','abs','dedTot'];
-    const dedCols=COLS.filter(c=>dedKeys.includes(c.key));
-    const dedX=dedCols[0].x, dedW=dedCols.reduce((s,c)=>s+c.w,0);
-    doc.setFillColor(255,235,235); doc.rect(dedX,y,dedW,SH,'F');
-    doc.setFont('helvetica','bold'); doc.setFontSize(5.5); doc.setTextColor(145,18,18);
-    doc.text('CONTRIBUTIONS & DEDUCTIONS',dedX+dedW/2,y+3.2,{align:'center'});
-
-    const netC=COLS.find(c=>c.key==='net');
-    doc.setFillColor(210,245,225); doc.rect(netC.x,y,netC.w,SH,'F');
-    doc.setFont('helvetica','bold'); doc.setFontSize(5.5); doc.setTextColor(5,100,55);
-    doc.text('NET',netC.x+netC.w/2,y+3.2,{align:'center'});
-
-    // name col span bg
-    const nameC=COLS[0];
-    doc.setFillColor(240,243,252); doc.rect(nameC.x,y,nameC.w,SH,'F');
-    doc.setDrawColor(205,215,235); doc.setLineWidth(0.1); doc.rect(M,y,CW,SH,'S');
-    y+=SH;
+    // ── Column group headers (Earnings | OT per Day | Deductions | Total) ──
+    const GROUPS=[
+      {label:'EARNINGS', cols:['name','pay','allow'], color:[240,245,255]},
+      {label:'OVERTIME (HRS)', cols:DAY_COLS.map(d=>'ot_'+d).concat(['ot_total','ot_pay']), color:[255,248,235]},
+      {label:'DEDUCTIONS', cols:['hol','sss','ph','pag','sssl','abs'], color:[255,243,243]},
+      {label:'TOTALS', cols:['earn','net'], color:[235,245,235]},
+    ];
+    let gx=M;
+    GROUPS.forEach(grp=>{
+      const gCols=cols.filter(c=>grp.cols.includes(c.key));
+      const gw=gCols.reduce((s,c)=>s+c.w,0);
+      if(gw===0)return;
+      doc.setFillColor(...grp.color);doc.rect(gx,y,gw,COL_H,'F');
+      doc.setFont('helvetica','bold');doc.setFontSize(5.5);doc.setTextColor(60,60,60);
+      doc.setCharSpace(0.5);doc.text(grp.label,gx+gw/2,y+COL_H-1.5,{align:'center'});doc.setCharSpace(0);
+      doc.setDrawColor(200,200,200);doc.setLineWidth(0.15);
+      doc.rect(gx,y,gw,COL_H,'S');
+      gx+=gw;
+    });
+    y+=COL_H;
 
     // ── Column headers ──
-    const CH=7;
-    COLS.forEach(col=>{
-      doc.setFillColor(...col.bg);
-      doc.setDrawColor(200,210,230); doc.setLineWidth(0.12);
-      doc.rect(col.x,y,col.w,CH,'FD');
-      doc.setFont('helvetica','bold'); doc.setFontSize(4.8); doc.setTextColor(...col.clr);
-      if(col.label.indexOf('\n')>=0){
-        const parts=col.label.split('\n');
-        doc.text(parts[0],col.x+col.w/2,y+2.6,{align:'center'});
-        doc.setFont('helvetica','normal'); doc.setFontSize(4.2);
-        doc.text(parts[1],col.x+col.w/2,y+5.4,{align:'center'});
-      } else {
-        doc.text(col.label, col.key==='name'?col.x+1.5:col.x+col.w/2, y+4.3,
-          {align:col.key==='name'?'left':'center'});
-      }
+    let cx=M;
+    doc.setFillColor(232,232,232);doc.rect(M,y,availW,COL_H,'F');
+    cols.forEach(col=>{
+      doc.setFont('helvetica','bold');doc.setFontSize(5.2);doc.setTextColor(30,30,30);
+      if(col.align==='left')doc.text(col.label,cx+2,y+COL_H-1.5);
+      else doc.text(col.label,cx+col.w/2,y+COL_H-1.5,{align:'center'});
+      doc.setDrawColor(200,200,200);doc.setLineWidth(0.1);doc.line(cx,y,cx,y+COL_H);
+      cx+=col.w;
     });
-    y+=CH;
+    doc.setDrawColor(150,150,150);doc.setLineWidth(0.2);
+    doc.line(M,y,M+availW,y);doc.line(M,y+COL_H,M+availW,y+COL_H);
+    y+=COL_H;
 
-    // ── Rows ──
-    const avail=maxH-BH-SH-CH-7-4;
-    const RH=Math.min(6, Math.max(4.5, avail/Math.max(filtered.length,1)));
-    const FS=Math.min(6, RH*0.88);
-    const cy=c=>y+RH/2+FS*0.2; // text y center
-
-    // totals accumulators
-    const T={pay:0,allow:0,otHrs:0,otPay:0,hol:0,sss:0,ph:0,pag:0,sssl:0,pagl:0,abs:0,dedTot:0,net:0};
-    DAYS.forEach(d=>{ T['ot_'+d]=0; });
-
+    // ── Data rows ──
+    const totals={};cols.forEach(c=>{if(c.key!=='name')totals[c.key]=0;});
     filtered.forEach((emp,ri)=>{
-      ensureOT(emp);
-      const pay   =n2(emp.cells['pay_'+wk]);
-      const allow =n2(emp.cells['allow_'+wk]);
-      const otHrs =getOTHrs(emp,wk);
-      const otPay =n2(emp.cells['ot_'+wk]);
-      const hol   =n2(emp.cells['hol_'+wk]);
-      const sss   =n2(emp.cells['sss_'+wk]);
-      const ph2   =n2(emp.cells['ph_'+wk]);
-      const pag   =n2(emp.cells['pag_'+wk]);
-      const sssl  =n2(emp.cells['sssl_'+wk]);
-      const pagl  =n2(emp.cells['pagl_'+wk]);
-      const abs   =n2(emp.cells['abs_'+wk]);
-      const dedTot=sss+ph2+pag+sssl+pagl+abs;
-      const net   =(pay+allow+otPay+hol)-dedTot;
-      const dayH  ={};
-      DAYS.forEach(d=>{ dayH[d]=n2(emp.ot[wk][d]); });
-
-      T.pay+=pay; T.allow+=allow; T.otHrs+=otHrs; T.otPay+=otPay;
-      T.hol+=hol; T.sss+=sss; T.ph+=ph2; T.pag+=pag;
-      T.sssl+=sssl; T.pagl+=pagl; T.abs+=abs; T.dedTot+=dedTot; T.net+=net;
-      DAYS.forEach(d=>{ T['ot_'+d]+=dayH[d]; });
-
-      // row background
-      doc.setFillColor(...(ri%2===0?[252,253,255]:[246,248,254]));
-      doc.rect(M,y,CW,RH,'F');
-
-      COLS.forEach(col=>{
-        doc.setDrawColor(222,228,242); doc.setLineWidth(0.08);
-        doc.rect(col.x,y,col.w,RH,'S');
-
-        const rx=col.x+col.w-1.2, ty=cy();
-
-        if(col.key==='name'){
-          doc.setFont('helvetica','bold'); doc.setFontSize(FS); doc.setTextColor(20,30,70);
-          const nm=emp.name; doc.text(nm.length>20?nm.slice(0,19)+'\u2026':nm, col.x+1.5, ty);
-          return;
-        }
-
-        if(col.key.startsWith('ot_')){
-          const d=col.key.slice(3), v=dayH[d];
-          if(v>0){
-            doc.setFillColor(255,242,210); doc.rect(col.x,y,col.w,RH,'F');
-            doc.setDrawColor(222,228,242); doc.setLineWidth(0.08); doc.rect(col.x,y,col.w,RH,'S');
-            doc.setFont('helvetica','bold'); doc.setFontSize(FS); doc.setTextColor(150,75,5);
-            doc.text(v.toFixed(1),rx,ty,{align:'right'});
-          } else {
-            doc.setFont('helvetica','normal'); doc.setFontSize(FS-0.8); doc.setTextColor(205,215,230);
-            doc.text('\u2013',col.x+col.w/2,ty,{align:'center'});
-          }
-          return;
-        }
-
-        let val=0, txt='', bold=col.bold, clr=col.clr;
-        if(col.key==='pay'     ){val=pay;   txt=val?P(val):''; clr=val?[35,60,145]:[205,215,230];}
-        else if(col.key==='allow'   ){val=allow; txt=val?P(val):''; clr=val?[35,60,145]:[205,215,230];}
-        else if(col.key==='otHrs'   ){val=otHrs; txt=val?val.toFixed(1):''; clr=val?[150,75,5]:[205,215,230];}
-        else if(col.key==='otPay'   ){val=otPay; txt=val?P(val):''; clr=val?[120,50,5]:[205,215,230];}
-        else if(col.key==='hol'     ){val=hol;   txt=val?P(val):''; clr=val?[25,105,65]:[205,215,230];}
-        else if(col.key==='sss'     ){val=sss;   txt=val?P(val):''; clr=val?[140,20,20]:[205,215,230];}
-        else if(col.key==='ph'      ){val=ph2;   txt=val?P(val):''; clr=val?[8,88,150]:[205,215,230];}
-        else if(col.key==='pag'     ){val=pag;   txt=val?P(val):''; clr=val?[5,108,68]:[205,215,230];}
-        else if(col.key==='sssl'    ){val=sssl;  txt=val?P(val):''; clr=val?[145,20,20]:[205,215,230];}
-        else if(col.key==='pagl'    ){val=pagl;  txt=val?P(val):''; clr=val?[155,20,20]:[205,215,230];}
-        else if(col.key==='abs'     ){val=abs;   txt=val?P(val):''; clr=val?[150,75,5]:[205,215,230];}
-        else if(col.key==='dedTot'  ){
-          val=dedTot;
-          if(val>0){ doc.setFillColor(255,228,228); doc.rect(col.x,y,col.w,RH,'F');
-            doc.setDrawColor(222,228,242); doc.setLineWidth(0.08); doc.rect(col.x,y,col.w,RH,'S'); }
-          doc.setFont('helvetica','bold'); doc.setFontSize(FS); doc.setTextColor(...(val?[145,18,18]:[205,215,230]));
-          doc.text(val?P(val):'\u2013',rx,ty,{align:'right'}); return;
-        }
-        else if(col.key==='net'){
-          const bg=net>=0?[212,248,228]:[255,225,225];
-          doc.setFillColor(...bg); doc.rect(col.x,y,col.w,RH,'F');
-          doc.setDrawColor(222,228,242); doc.setLineWidth(0.08); doc.rect(col.x,y,col.w,RH,'S');
-          doc.setFont('helvetica','bold'); doc.setFontSize(FS+0.3); doc.setTextColor(...(net>=0?[5,95,52]:[170,18,18]));
-          doc.text(P(net),rx,ty,{align:'right'}); return;
-        }
-
-        doc.setFont('helvetica',bold?'bold':'normal'); doc.setFontSize(bold?FS+0.2:FS);
-        doc.setTextColor(...clr);
-        if(txt){ doc.text(txt,rx,ty,{align:'right'}); }
-        else { doc.setFont('helvetica','normal'); doc.setFontSize(FS-0.8); doc.setTextColor(205,215,230); doc.text('\u2013',col.x+col.w/2,ty,{align:'center'}); }
+      const row=empRow(emp);
+      if(ri%2===0){doc.setFillColor(250,250,252);doc.rect(M,y,availW,ROW_H,'F');}
+      cx=M;
+      cols.forEach(col=>{
+        const val=row[col.key];
+        let txt='';
+        if(col.key==='name'){txt=val;}
+        else if(col.isOT){txt=val>0?val.toFixed(1):'\u2014';}
+        else if(col.key==='ot_total'){txt=val>0?val.toFixed(1):'\u2014';}
+        else{txt=val>0?P(val):'\u2014';}
+        doc.setFont('helvetica','normal');doc.setFontSize(col.key==='name'?6.5:6);
+        doc.setTextColor(col.key==='net'?17:34, col.key==='net'?17:34, col.key==='net'?17:34);
+        if(col.key==='net')doc.setFont('helvetica','bold');
+        if(col.align==='left')doc.text(txt,cx+2,y+ROW_H-1.4,{maxWidth:col.w-3});
+        else doc.text(txt,cx+col.w/2,y+ROW_H-1.4,{align:'center'});
+        // track totals
+        if(col.key!=='name' && typeof val==='number')totals[col.key]=(totals[col.key]||0)+val;
+        doc.setDrawColor(230,230,230);doc.setLineWidth(0.08);doc.line(cx,y,cx,y+ROW_H);
+        cx+=col.w;
       });
-      y+=RH;
+      doc.setDrawColor(230,230,230);doc.setLineWidth(0.08);doc.line(M,y+ROW_H,M+availW,y+ROW_H);
+      y+=ROW_H;
     });
 
-    // ── Footer / Totals ──
-    const FH=6.5;
-    doc.setFillColor(232,237,252); doc.rect(M,y,CW,FH,'F');
-    doc.setDrawColor(168,182,215); doc.setLineWidth(0.25); doc.rect(M,y,CW,FH,'S');
-
-    COLS.forEach(col=>{
-      doc.setDrawColor(185,195,220); doc.setLineWidth(0.12); doc.rect(col.x,y,col.w,FH,'S');
-      const rx=col.x+col.w-1.2, ty=y+4.2;
-
-      if(col.key==='name'){
-        doc.setFont('helvetica','bold'); doc.setFontSize(6.2); doc.setTextColor(55,70,120);
-        doc.text('TOTAL',col.x+1.5,ty); return;
-      }
-      if(col.key.startsWith('ot_')){
-        const v=T[col.key];
-        doc.setFont('helvetica','bold'); doc.setFontSize(6); doc.setTextColor(...(v?[150,75,5]:[200,210,228]));
-        doc.text(v?v.toFixed(1):'\u2013',rx,ty,{align:'right'}); return;
-      }
-      if(col.key==='otHrs'){
-        doc.setFont('helvetica','bold'); doc.setFontSize(6.5); doc.setTextColor(150,75,5);
-        doc.text(T.otHrs?T.otHrs.toFixed(1):'\u2013',rx,ty,{align:'right'}); return;
-      }
-      if(col.key==='otPay'){
-        doc.setFont('helvetica','bold'); doc.setFontSize(6.5); doc.setTextColor(120,50,5);
-        doc.text(T.otPay?P(T.otPay):'\u2013',rx,ty,{align:'right'}); return;
-      }
-      if(col.key==='dedTot'){
-        doc.setFillColor(255,215,215); doc.rect(col.x,y,col.w,FH,'F');
-        doc.setDrawColor(185,195,220); doc.setLineWidth(0.12); doc.rect(col.x,y,col.w,FH,'S');
-        doc.setFont('helvetica','bold'); doc.setFontSize(6.5); doc.setTextColor(145,18,18);
-        doc.text(T.dedTot?P(T.dedTot):'\u2013',rx,ty,{align:'right'}); return;
-      }
-      if(col.key==='net'){
-        doc.setFillColor(192,240,212); doc.rect(col.x,y,col.w,FH,'F');
-        doc.setDrawColor(185,195,220); doc.setLineWidth(0.12); doc.rect(col.x,y,col.w,FH,'S');
-        doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.setTextColor(5,95,52);
-        doc.text(P(T.net),rx,ty,{align:'right'}); return;
-      }
-      const vmap={pay:T.pay,allow:T.allow,hol:T.hol,sss:T.sss,ph:T.ph,pag:T.pag,sssl:T.sssl,pagl:T.pagl,abs:T.abs};
-      const v=vmap[col.key]||0;
-      doc.setFont('helvetica','bold'); doc.setFontSize(6); doc.setTextColor(...col.clr);
-      doc.text(v?P(v):'\u2013',rx,ty,{align:'right'});
+    // ── Totals row ──
+    doc.setFillColor(220,230,255);doc.rect(M,y,availW,FOOT_H,'F');
+    doc.setDrawColor(150,150,150);doc.setLineWidth(0.2);doc.line(M,y,M+availW,y);
+    cx=M;
+    cols.forEach(col=>{
+      let txt='';
+      if(col.key==='name'){txt='TOTAL';}
+      else if(col.isOT){txt=totals[col.key]>0?totals[col.key].toFixed(1):'';}
+      else if(col.key==='ot_total'){txt=totals[col.key]>0?totals[col.key].toFixed(1):'';}
+      else{txt=totals[col.key]>0?P(totals[col.key]):'';}
+      doc.setFont('helvetica','bold');doc.setFontSize(col.key==='name'?6.5:6);doc.setTextColor(17,17,17);
+      if(col.align==='left')doc.text(txt,cx+2,y+FOOT_H-1.8);
+      else doc.text(txt,cx+col.w/2,y+FOOT_H-1.8,{align:'center'});
+      doc.setDrawColor(200,200,200);doc.setLineWidth(0.1);doc.line(cx,y,cx,y+FOOT_H);
+      cx+=col.w;
     });
-    return y+FH;
+    doc.setDrawColor(150,150,150);doc.setLineWidth(0.2);doc.line(M,y+FOOT_H,M+availW,y+FOOT_H);
+    y+=FOOT_H;
+    return y;
   }
 
-  function addFooters(){
-    const tp=doc.getNumberOfPages();
-    for(let p=1;p<=tp;p++){
-      doc.setPage(p);
-      doc.setDrawColor(205,212,232); doc.setLineWidth(0.3);
-      doc.line(M,PH-7,PW-M,PH-7);
-      doc.setFont('helvetica','normal'); doc.setFontSize(5.5); doc.setTextColor(158,165,188);
-      doc.text('Generated: '+new Date().toLocaleDateString('en-PH',{year:'numeric',month:'long',day:'numeric'}),M,PH-4.5);
-      doc.text('CONFIDENTIAL \u2014 For Internal Use Only',PW/2,PH-4.5,{align:'center'});
-      doc.text('Page '+p+' of '+tp,PW-M,PH-4.5,{align:'right'});
-    }
-  }
-
-  if(isCombined){
-    doc.setFillColor(15,48,172); doc.rect(M,M,CW,9,'F');
-    doc.setFillColor(80,125,255); doc.rect(M,M,4,9,'F');
-    doc.setFont('helvetica','bold'); doc.setFontSize(10.5); doc.setTextColor(255,255,255);
-    doc.text('WEEKLY PAYROLL SUMMARY \u2014 '+wkLabel, PW/2, M+6, {align:'center'});
-    const titleH=9+3;
-    const halfH=Math.floor((PH-M*2-titleH-8)/2)-2;
-    drawGroup(mo.litrad,'litrad','LITRAD INC.',M+titleH,halfH);
-    const divY=M+titleH+halfH+1;
-    doc.setDrawColor(178,190,215); doc.setLineWidth(0.4);
-    doc.setLineDash([3,2]); doc.line(M,divY,PW-M,divY); doc.setLineDash([]);
-    drawGroup(mo.jvt,'jvt','JVT CORPORATION',divY+2,halfH);
+  if(layout==='combined'){
+    const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+    let y=drawSection(doc,mo.litrad,'LITRAD INC.','litrad',M)+6;
+    if(y+40>PH-M){doc.addPage();y=M;}
+    drawSection(doc,mo.jvt,'JVT CORPORATION','jvt',y);
+    doc.save('WEEKLY_'+selectedWk+'_COMBINED_'+curMonth+'_'+curYear+'.pdf');
   } else {
-    drawGroup(mo.litrad,'litrad','LITRAD INC.',M,PH-M*2-8);
+    const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+    drawSection(doc,mo.litrad,'LITRAD INC.','litrad',M);
     doc.addPage();
-    drawGroup(mo.jvt,'jvt','JVT CORPORATION',M,PH-M*2-8);
+    drawSection(doc,mo.jvt,'JVT CORPORATION','jvt',M);
+    doc.save('WEEKLY_'+selectedWk+'_'+curMonth+'_'+curYear+'.pdf');
+  }
+}
+
+
+function drawPageCombined(emps1,gn1,cn1,emps2,gn2,cn2,doc,wk){
+  const f1=emps1.filter(e=>!WEEKLY_EXCL.includes(e.name));
+  const f2=emps2.filter(e=>!WEEKLY_EXCL.includes(e.name));
+  const totalRows=f1.length+f2.length;
+  const pw=297,ph=210,m=10,cw=pw-m*2;
+  const ROW_H=Math.min(6, (ph-m*2-50)/Math.max(totalRows,1));
+
+  let y=m;
+  const barClr1=[26,79,207],barClr2=[6,95,70];
+
+  function drawSection(emps,grp,companyName,barClr){
+    doc.setFillColor(...barClr);doc.rect(m,y,cw,7,'F');
+    doc.setFont('helvetica','bold');doc.setFontSize(8.5);doc.setTextColor(255,255,255);
+    doc.text(companyName,m+4,y+5);
+    doc.text(curMonth+' '+curYear+' — WEEK '+wk,pw-m-4,y+5,{align:'right'});
+    const headerY=y+7;
+    const colW=[50,25,25,25,20,20,20,25,25];
+    const cols=['EMPLOYEE','REG PAY','OT PAY','HOL PAY','SSS','PHILHEALTH','PAG-IBIG','TOTAL EARN','NET PAY'];
+    let x=m;
+    doc.setFillColor(232,232,232);doc.rect(m,headerY,cw,6,'F');
+    doc.setFont('helvetica','bold');doc.setFontSize(6);doc.setTextColor(17,17,17);
+    cols.forEach((col,ci)=>{
+      doc.text(col,x+(ci===0?2:colW[ci]/2),headerY+4.2,ci>0?{align:'center'}:{});
+      if(ci>0)doc.setDrawColor(200,200,200),doc.setLineWidth(0.1),doc.line(x,headerY,x,headerY+6);
+      x+=colW[ci];
+    });
+    doc.setDrawColor(180,180,180);doc.setLineWidth(0.15);doc.line(m,headerY+6,m+cw,headerY+6);
+    let ry=headerY+6;
+    emps.forEach((emp,ri)=>{
+      if(ri%2===0){doc.setFillColor(250,250,250);doc.rect(m,ry,cw,ROW_H,'F');}
+      doc.setFont('helvetica','normal');doc.setFontSize(6.5);doc.setTextColor(17,17,17);
+      const pay=n2(emp.cells['pay_'+wk]),allow=n2(emp.cells['allow_'+wk]);
+      const ot=n2(emp.cells['ot_'+wk]),hol=n2(emp.cells['hol_'+wk]);
+      const sss=n2(emp.cells['sss_'+wk]),ph=n2(emp.cells['ph_'+wk]),pag=n2(emp.cells['pag_'+wk]);
+      const earn=pay+allow+ot+hol,ded=sss+ph+pag+n2(emp.cells['sssl_'+wk])+n2(emp.cells['pagl_'+wk])+n2(emp.cells['abs_'+wk]);
+      const vals=[emp.name,pay,ot,hol,sss,ph,pag,earn,earn-ded];
+      x=m;
+      vals.forEach((v,vi)=>{
+        const txt=vi===0?v:(n2(v)>0?P(v):'\u2014');
+        if(vi===0)doc.text(txt,x+2,ry+ROW_H-1.2,{maxWidth:colW[0]-3});
+        else doc.text(txt,x+colW[vi]/2,ry+ROW_H-1.2,{align:'center'});
+        if(vi>0)doc.setDrawColor(220,220,220),doc.setLineWidth(0.1),doc.line(x,ry,x,ry+ROW_H);
+        x+=colW[vi];
+      });
+      doc.setDrawColor(235,235,235);doc.setLineWidth(0.1);doc.line(m,ry+ROW_H,m+cw,ry+ROW_H);
+      ry+=ROW_H;
+    });
+    return ry;
   }
 
-  addFooters();
-  const tag=isCombined?'COMBINED':'SEPARATE';
-  doc.save('WEEKLY_SUMMARY_'+curMonth+'_'+curYear+'_'+wk+'_'+tag+'.pdf');
+  const y1end=drawSection(f1,gn1,cn1,barClr1);
+  y=y1end+4;
+  drawSection(f2,gn2,cn2,barClr2);
 }
 
 
-function exportCSV(){
-  if(!curMonth||!DB[curMonth])return;
-  const rows=[],hdr=['GROUP','EMPLOYEE','WORK_DAYS'];
-  SECTIONS.forEach(s=>WKS.forEach(w=>hdr.push(`${s.l}_${w}`)));
-  WKS.forEach(w=>hdr.push('NET_'+w));WKS.forEach(w=>DAYS.forEach(d=>hdr.push(`OT_${w}_${d}`)));
-  rows.push(hdr.join(','));
-  ['litrad','jvt'].forEach(g=>{DB[curMonth][g].forEach(emp=>{const r=[g.toUpperCase(),`"${emp.name}"`,emp.workDays||6];SECTIONS.forEach(s=>WKS.forEach(w=>r.push(n2(emp.cells[s.k+'_'+w]).toFixed(2))));WKS.forEach(w=>r.push(calcNet(emp,w).toFixed(2)));WKS.forEach(w=>DAYS.forEach(d=>r.push(n2(emp.ot?.[w]?.[d]).toFixed(1))));rows.push(r.join(','));});});
-  const blob=new Blob([rows.join('\n')],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`PAYROLL_${curMonth}_${curYear}.csv`;a.click();
+function setSummaryPdfMode(mode){
+  const btnM=document.getElementById('pdf-opt-monthly');
+  const btnW=document.getElementById('pdf-opt-weekly');
+  // Both possible IDs for the week row picker
+  const wkRow=document.getElementById('summary-week-row')||document.getElementById('week-picker');
+  const layoutPicker=document.getElementById('layout-picker');
+  const blueActive='var(--blue)';
+  if(btnM){btnM.style.background=mode==='monthly'?'#111':'var(--white)';btnM.style.color=mode==='monthly'?'#fff':'var(--text2)';}
+  if(btnW){btnW.style.background=mode==='weekly'?'#111':'var(--white)';btnW.style.color=mode==='weekly'?'#fff':'var(--text2)';}
+  if(wkRow)wkRow.style.display=mode==='weekly'?'flex':'none';
+  if(layoutPicker){layoutPicker.style.display=mode==='weekly'?'flex':'none';}
 }
-
-function openModal(id){document.getElementById(id).classList.remove('hidden');}
-function closeModal(id){document.getElementById(id).classList.add('hidden');}
-function openConfirm(title,msg,cb){document.getElementById('conf-title').textContent=title;document.getElementById('conf-msg').textContent=msg;confirmCb=cb;openModal('m-conf');}
-document.getElementById('conf-ok').onclick=()=>{if(confirmCb)confirmCb();closeModal('m-conf');confirmCb=null;};
-['m-new','m-emp','m-conf','m-leave'].forEach(id=>{document.getElementById(id).addEventListener('click',e=>{if(e.target.id===id)closeModal(id);});});
-document.getElementById('nm-inp').addEventListener('keydown',e=>{if(e.key==='Enter')confirmNewMonth();});
-document.getElementById('emp-inp').addEventListener('keydown',e=>{if(e.key==='Enter')confirmAddEmp();});
-document.addEventListener('keydown',e=>{
-  if((e.key==='Enter'||e.key==='Tab')&&document.activeElement.tagName==='INPUT'&&!document.activeElement.readOnly){
-    const all=[...document.querySelectorAll('.pt input[type=number]:not([readonly]),.ott input[type=number]:not([readonly])')];
-    const idx=all.indexOf(document.activeElement);if(idx>=0&&idx<all.length-1){e.preventDefault();all[idx+1].focus();all[idx+1].select();}
+function doExportSummaryPDF(){
+  // Detect mode: if weekly button has dark background, mode is weekly
+  const btnW=document.getElementById('pdf-opt-weekly');
+  const mode=(btnW&&(btnW.style.background==='rgb(17, 17, 17)'||btnW.style.background==='#111'))?'weekly':'monthly';
+  if(mode==='monthly'){
+    exportMonthlySummaryPDF();
+  } else {
+    const wkSel=document.getElementById('summary-week-sel');
+    const layoutSel=document.getElementById('summary-layout-sel');
+    const wk=wkSel?wkSel.value:'W1';
+    const layout=layoutSel?layoutSel.value:'separate';
+    exportWeeklyBreakdownPDF(wk, layout);
   }
-  if(e.key==='Escape')['m-new','m-emp','m-conf','m-leave'].forEach(id=>closeModal(id));
-});
-
-// ── YEAR MANAGEMENT ──
-let curYear=new Date().getFullYear().toString();
-function getYearList(){
-  const stored=JSON.parse(localStorage.getItem('pr26_years')||'[]');
-  if(!stored.includes(curYear))stored.push(curYear);
-  stored.sort();localStorage.setItem('pr26_years',JSON.stringify(stored));
-  return stored;
 }
-function switchYear(yr){
-  save();localStorage.setItem('pr26_curyear',yr);curYear=yr;
-  const raw=localStorage.getItem('pr26c_'+yr);DB=raw?JSON.parse(raw):{};
-  curMonth=localStorage.getItem('pr26cm_'+yr)||'';
-  if(!Object.keys(DB).filter(k=>k!=='_empMeta').length){DB['JANUARY']=seedJan();DB['FEBRUARY']=seedFeb();curMonth='FEBRUARY';}
-  if(!curMonth||!DB[curMonth])curMonth=Object.keys(DB).filter(k=>k!=='_empMeta')[0]||'';
-  otWkIdx=0;renderAll();
-}
-function addYear(){
-  const yr=prompt('Enter year (e.g. 2027):');if(!yr)return;
-  const y=yr.trim();if(!/^\d{4}$/.test(y)){alert('Invalid year format');return;}
-  const stored=getYearList();if(!stored.includes(y)){stored.push(y);localStorage.setItem('pr26_years',JSON.stringify(stored));}
-  switchYear(y);
-}
-function deleteYear(yr){
-  const ylist=getYearList();if(ylist.length<=1){alert('Cannot delete the only year.');return;}
-  if(!confirm(`Delete year ${yr} and ALL its payroll data? This cannot be undone.`))return;
-  const updated=ylist.filter(y=>y!==yr);localStorage.setItem('pr26_years',JSON.stringify(updated));
-  localStorage.removeItem('pr26c_'+yr);localStorage.removeItem('pr26cm_'+yr);
-  if(curYear===yr){switchYear(updated[0]);}else{renderYearTabs();}
-}
-
 save=function(){localStorage.setItem('pr26c_'+curYear,JSON.stringify(DB));localStorage.setItem('pr26cm_'+curYear,curMonth);};
 load=function(){
   curYear=localStorage.getItem('pr26_curyear')||new Date().getFullYear().toString();
