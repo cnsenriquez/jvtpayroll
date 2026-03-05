@@ -484,6 +484,59 @@ function switchPage(p){
   else if(p==='payslip') renderPayslip();
 }
 
+function toggleGroup(id,btn){document.getElementById(id).classList.toggle('hidden');btn.classList.toggle('collapsed');}
+
+function openNewMonth(){document.getElementById('nm-inp').value='';openModal('m-new');setTimeout(()=>document.getElementById('nm-inp').focus(),60);}
+function confirmNewMonth(){
+  let name=document.getElementById('nm-inp').value.trim().toUpperCase();
+  if(!name)return;if(DB[name]){alert('Month already exists!');return;}
+  const months=Object.keys(DB).filter(k=>k!=='_empMeta');
+  const last=months.length?DB[months[months.length-1]]:null;
+  const clr=['ot','hol','abs','sssl','pagl'];
+  const cloneGrp=emps=>emps.map(e=>{const ne=mkEmp(e.name,{},e.workDays||6);SECTIONS.forEach(s=>WKS.forEach(w=>{const k=s.k+'_'+w;ne.cells[k]=clr.includes(s.k)?'':e.cells[k];}));WKS.forEach(w=>{DAYS.forEach(d=>{ne.ot[w][d]='';});});return ne;});
+  DB[name]=last?{litrad:cloneGrp(last.litrad),jvt:cloneGrp(last.jvt),leaves:[]}:seedFeb();
+  curMonth=name;otWkIdx=0;save();renderAll();closeModal('m-new');
+}
+function askDeleteMonth(){
+  if(Object.keys(DB).filter(k=>k!=='_empMeta').length<=1){alert('Cannot delete the only month.');return;}
+  openConfirm(`Delete "${curMonth}"?`,`All payroll, OT, and leave data for ${curMonth} will be deleted.`,()=>{
+    delete DB[curMonth];
+    const s=Object.keys(DB).filter(k=>k!=='_empMeta').sort((a,b)=>{const ai=MO.indexOf(a),bi=MO.indexOf(b);return(ai<0?99:ai)-(bi<0?99:bi);});
+    curMonth=s[0]||'';save();renderAll();
+  });
+}
+
+function openAddEmp(g){pendingGroup=g;document.getElementById('emp-inp').value='';document.getElementById('emp-days').value='6';document.getElementById('m-emp-title').textContent=`Add Employee — ${g.toUpperCase()}`;openModal('m-emp');setTimeout(()=>document.getElementById('emp-inp').focus(),60);}
+function confirmAddEmp(){const name=document.getElementById('emp-inp').value.trim().toUpperCase();const wd=parseInt(document.getElementById('emp-days').value)||6;if(!name)return;DB[curMonth][pendingGroup].push(mkEmp(name,{},wd));save();renderPayroll();updateSbar();closeModal('m-emp');}
+function askDelEmp(g,i){const name=DB[curMonth][g][i].name;openConfirm(`Remove "${name}"?`,`Remove from ${g.toUpperCase()} for ${curMonth}?`,()=>{DB[curMonth][g].splice(i,1);save();renderPayroll();updateSbar();});}
+
+function exportCSV(){
+  if(!curMonth||!DB[curMonth])return;
+  const rows=[],hdr=['GROUP','EMPLOYEE','WORK_DAYS'];
+  SECTIONS.forEach(s=>WKS.forEach(w=>hdr.push(`${s.l}_${w}`)));
+  WKS.forEach(w=>hdr.push('NET_'+w));WKS.forEach(w=>DAYS.forEach(d=>hdr.push(`OT_${w}_${d}`)));
+  rows.push(hdr.join(','));
+  ['litrad','jvt'].forEach(g=>{DB[curMonth][g].forEach(emp=>{const r=[g.toUpperCase(),`"${emp.name}"`,emp.workDays||6];SECTIONS.forEach(s=>WKS.forEach(w=>r.push(n2(emp.cells[s.k+'_'+w]).toFixed(2))));WKS.forEach(w=>r.push(calcNet(emp,w).toFixed(2)));WKS.forEach(w=>DAYS.forEach(d=>r.push(n2(emp.ot?.[w]?.[d]).toFixed(1))));rows.push(r.join(','));});});
+  const blob=new Blob([rows.join('\
+')],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`PAYROLL_${curMonth}_${curYear}.csv`;a.click();
+}
+
+function openModal(id){document.getElementById(id).classList.remove('hidden');}
+function closeModal(id){document.getElementById(id).classList.add('hidden');}
+function openConfirm(title,msg,cb){document.getElementById('conf-title').textContent=title;document.getElementById('conf-msg').textContent=msg;confirmCb=cb;openModal('m-conf');}
+document.getElementById('conf-ok').onclick=()=>{if(confirmCb)confirmCb();closeModal('m-conf');confirmCb=null;};
+['m-new','m-emp','m-conf','m-leave'].forEach(id=>{document.getElementById(id).addEventListener('click',e=>{if(e.target.id===id)closeModal(id);});});
+document.getElementById('nm-inp').addEventListener('keydown',e=>{if(e.key==='Enter')confirmNewMonth();});
+document.getElementById('emp-inp').addEventListener('keydown',e=>{if(e.key==='Enter')confirmAddEmp();});
+document.addEventListener('keydown',e=>{
+  if((e.key==='Enter'||e.key==='Tab')&&document.activeElement.tagName==='INPUT'&&!document.activeElement.readOnly){
+    const all=[...document.querySelectorAll('.pt input[type=number]:not([readonly]),.ott input[type=number]:not([readonly])')];
+    const idx=all.indexOf(document.activeElement);if(idx>=0&&idx<all.length-1){e.preventDefault();all[idx+1].focus();all[idx+1].select();}
+  }
+  if(e.key==='Escape')['m-new','m-emp','m-conf','m-leave'].forEach(id=>closeModal(id));
+});
+
+
 function updateSbar(){
   const mo=DB[curMonth];
   const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
