@@ -247,6 +247,8 @@ td.sep-l{border-left:2px solid var(--border2)!important;}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+  <!-- Firebase v8 SDK -->
 </head>
 <body>
 
@@ -396,6 +398,8 @@ td.sep-l{border-left:2px solid var(--border2)!important;}
 </div></div>
 
 <script>
+// ── Firebase injected via module (see bottom of file) ──
+
 const SECTIONS=[
   {k:'pay',  l:'REGULAR PAY',         cls:'h-pay',  ded:false},
   {k:'allow',l:'WEEKLY ALLOWANCE',    cls:'h-allow',ded:false},
@@ -511,15 +515,19 @@ function confirmAddEmp(){const name=document.getElementById('emp-inp').value.tri
 function askDelEmp(g,i){const name=DB[curMonth][g][i].name;openConfirm(`Remove "${name}"?`,`Remove from ${g.toUpperCase()} for ${curMonth}?`,()=>{DB[curMonth][g].splice(i,1);save();renderPayroll();updateSbar();});}
 
 function exportCSV(){
-  if(!curMonth||!DB[curMonth])return;
+  if(!curMonth||!DB[curMonth]){ alert('Walang data para i-export. Pumili muna ng month na may laman.'); return; }
+  const mo=DB[curMonth];
+  const litrad=mo.litrad||[], jvt=mo.jvt||[];
+  if(!litrad.length && !jvt.length){ alert('Walang employees sa '+curMonth+' '+curYear+'.'); return; }
   const rows=[],hdr=['GROUP','EMPLOYEE','WORK_DAYS'];
   SECTIONS.forEach(s=>WKS.forEach(w=>hdr.push(`${s.l}_${w}`)));
   WKS.forEach(w=>hdr.push('NET_'+w));WKS.forEach(w=>DAYS.forEach(d=>hdr.push(`OT_${w}_${d}`)));
   rows.push(hdr.join(','));
-  ['litrad','jvt'].forEach(g=>{DB[curMonth][g].forEach(emp=>{const r=[g.toUpperCase(),`"${emp.name}"`,emp.workDays||6];SECTIONS.forEach(s=>WKS.forEach(w=>r.push(n2(emp.cells[s.k+'_'+w]).toFixed(2))));WKS.forEach(w=>r.push(calcNet(emp,w).toFixed(2)));WKS.forEach(w=>DAYS.forEach(d=>r.push(n2(emp.ot?.[w]?.[d]).toFixed(1))));rows.push(r.join(','));});});
-  const blob=new Blob([rows.join('\
-')],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`PAYROLL_${curMonth}_${curYear}.csv`;a.click();
+  ['litrad','jvt'].forEach(g=>{(mo[g]||[]).forEach(emp=>{const r=[g.toUpperCase(),`"${emp.name}"`,emp.workDays||6];SECTIONS.forEach(s=>WKS.forEach(w=>r.push(n2(emp.cells[s.k+'_'+w]).toFixed(2))));WKS.forEach(w=>r.push(calcNet(emp,w).toFixed(2)));WKS.forEach(w=>DAYS.forEach(d=>r.push(n2(emp.ot?.[w]?.[d]).toFixed(1))));rows.push(r.join(','));});});
+  const csvContent='\ufeff'+rows.join('\r\n');
+  const blob=new Blob([csvContent],{type:'text/csv;charset=utf-8;'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`PAYROLL_${curMonth}_${curYear}.csv`;document.body.appendChild(a);a.click();document.body.removeChild(a);
 }
+
 
 function openModal(id){document.getElementById(id).classList.remove('hidden');}
 function closeModal(id){document.getElementById(id).classList.add('hidden');}
@@ -773,6 +781,9 @@ function renderWeekly(){
     <div style="display:flex;gap:8px;align-items:center;">
       <div style="display:flex;align-items:center;gap:0;background:var(--white);border:1.5px solid var(--border2);border-radius:8px;overflow:hidden;">
         <span style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;padding:0 10px;white-space:nowrap;border-right:1px solid var(--border2)">Export</span>
+        <button onclick="openSummaryFilter()" title="Filter company / employees" style="padding:6px 11px;border:none;border-right:1px solid var(--border2);background:var(--white);color:var(--text2);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px;">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>Filter
+        </button>
         <button id="pdf-opt-monthly" onclick="setSummaryPdfMode('monthly')" style="padding:6px 12px;border:none;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;background:var(--blue);color:#fff;transition:all .15s;">Monthly</button>
         <div style="position:relative;display:inline-flex;align-items:center;border-left:1px solid var(--border2);">
           <button id="pdf-opt-weekly" onclick="setSummaryPdfMode('weekly')" style="padding:6px 12px;border:none;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;background:var(--white);color:var(--text2);transition:all .15s;">Weekly</button>
@@ -796,6 +807,9 @@ function renderWeekly(){
         </div>
         <button onclick="doExportSummaryPDF()" style="padding:6px 13px;border:none;border-left:1px solid var(--border2);background:#111;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px;">
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>PDF
+        </button>
+        <button onclick="exportSummaryExcel()" style="padding:6px 13px;border:none;border-left:1px solid var(--border2);background:#0e7c3f;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px;">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Excel
         </button>
       </div>
       <button class="ps-pdf-btn" onclick="window.print()" style="background:#444;font-size:11px;padding:6px 13px;">
@@ -1328,6 +1342,106 @@ function exportAllPayslipsPDF(){
 }
 
 
+// ── SUMMARY EXPORT FILTER (Company + Employee exclude) ──
+// Shared by: exportMonthlySummaryPDF, exportWeeklyBreakdownPDF, exportSummaryExcel
+function getSumFilter(){
+  if(!curMonth||!DB[curMonth]) return {company:'all', excluded:[]};
+  if(!DB[curMonth]._sumFilter) DB[curMonth]._sumFilter={company:'all', excluded:[]};
+  if(!DB[curMonth]._sumFilter.excluded) DB[curMonth]._sumFilter.excluded=[];
+  if(!DB[curMonth]._sumFilter.company) DB[curMonth]._sumFilter.company='all';
+  return DB[curMonth]._sumFilter;
+}
+
+// Returns {litrad:[...filtered emps], jvt:[...filtered emps]} respecting company + excluded + WEEKLY_EXCL
+function getFilteredGroups(){
+  const mo=DB[curMonth];
+  if(!mo) return {litrad:[], jvt:[]};
+  const f=getSumFilter();
+  function applyFilter(emps){
+    return (emps||[]).filter(e=>!WEEKLY_EXCL.includes(e.name) && !f.excluded.includes(e.name));
+  }
+  return {
+    litrad: f.company==='jvt' ? [] : applyFilter(mo.litrad),
+    jvt:    f.company==='litrad' ? [] : applyFilter(mo.jvt),
+  };
+}
+
+function openSummaryFilter(){
+  if(!curMonth||!DB[curMonth]){ alert('Walang data para i-filter.'); return; }
+  const mo=DB[curMonth];
+  const f=getSumFilter();
+
+  let modal=document.getElementById('sum-filter-modal');
+  if(modal) modal.remove();
+
+  const allGroups=[
+    {key:'litrad', label:'LITRAD EMPLOYEES', emps: mo.litrad||[]},
+    {key:'jvt',    label:'JVT PAYROLL',      emps: mo.jvt||[]},
+  ];
+
+  let listHtml='';
+  allGroups.forEach(grp=>{
+    if(!grp.emps.length) return;
+    listHtml+=`<div style="font-size:10px;font-weight:800;color:#6b7a99;text-transform:uppercase;letter-spacing:1px;margin:14px 0 8px;padding-bottom:6px;border-bottom:1px solid #e5e7eb">${grp.label}</div>`;
+    grp.emps.forEach(emp=>{
+      const checked = !f.excluded.includes(emp.name);
+      listHtml+=`<label style="display:flex;align-items:center;gap:10px;padding:7px 4px;cursor:pointer;font-size:13px;color:#1a1f36">
+        <input type="checkbox" data-empname="${emp.name.replace(/"/g,'&quot;')}" ${checked?'checked':''} style="width:16px;height:16px;cursor:pointer;accent-color:#1a4fcf">
+        ${emp.name}
+      </label>`;
+    });
+  });
+
+  modal=document.createElement('div');
+  modal.id='sum-filter-modal';
+  modal.style.cssText='position:fixed;inset:0;background:rgba(20,25,40,.5);z-index:9000;display:flex;align-items:center;justify-content:center;padding:20px';
+  modal.innerHTML=`
+    <div style="background:#fff;border-radius:14px;max-width:420px;width:100%;max-height:82vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.3)">
+      <div style="padding:18px 20px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between">
+        <div style="font-size:14px;font-weight:800;color:#1a1f36">Filter Summary Export</div>
+        <button onclick="closeSummaryFilter()" style="background:none;border:none;font-size:20px;color:#999;cursor:pointer;line-height:1">×</button>
+      </div>
+      <div style="padding:14px 20px 4px">
+        <div style="font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Company</div>
+        <select id="sum-filter-company" style="width:100%;padding:8px 12px;border:1.5px solid #d0d7e8;border-radius:7px;font-size:13px;font-weight:700;color:#1a1f36;background:#fff;cursor:pointer;outline:none">
+          <option value="all"${f.company==='all'?' selected':''}>🏢 All Companies</option>
+          <option value="litrad"${f.company==='litrad'?' selected':''}>LITRAD only</option>
+          <option value="jvt"${f.company==='jvt'?' selected':''}>JVT only</option>
+        </select>
+      </div>
+      <div style="padding:10px 20px 2px;font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.8px">Employees</div>
+      <div style="padding:2px 20px 6px;font-size:11px;color:#888">Untick para tanggalin sa PDF / Excel export.</div>
+      <div id="sum-filter-list" style="padding:4px 20px 18px;overflow-y:auto;flex:1">
+        ${listHtml||'<div style="text-align:center;color:#999;padding:20px;font-size:12px">No employees this month.</div>'}
+      </div>
+      <div style="padding:14px 20px;border-top:1px solid #e5e7eb;display:flex;gap:8px;justify-content:flex-end">
+        <button onclick="closeSummaryFilter()" style="padding:8px 16px;background:#f0f2f7;border:none;border-radius:7px;font-size:12px;font-weight:700;color:#555;cursor:pointer">Cancel</button>
+        <button onclick="saveSummaryFilter()" style="padding:8px 18px;background:#1a4fcf;border:none;border-radius:7px;font-size:12px;font-weight:700;color:#fff;cursor:pointer">Save</button>
+      </div>
+    </div>`;
+  document.body.appendChild(modal);
+}
+
+function closeSummaryFilter(){
+  const modal=document.getElementById('sum-filter-modal');
+  if(modal) modal.remove();
+}
+
+function saveSummaryFilter(){
+  if(!curMonth||!DB[curMonth]){ closeSummaryFilter(); return; }
+  const f=getSumFilter();
+  const modal=document.getElementById('sum-filter-modal');
+  if(!modal){ closeSummaryFilter(); return; }
+  const companySel=document.getElementById('sum-filter-company');
+  f.company = companySel ? companySel.value : 'all';
+  const checkboxes=modal.querySelectorAll('input[type="checkbox"][data-empname]');
+  const excluded=[];
+  checkboxes.forEach(cb=>{ if(!cb.checked) excluded.push(cb.dataset.empname); });
+  f.excluded=excluded;
+  save();
+  closeSummaryFilter();
+}
+
 function exportMonthlySummaryPDF(){
   const mo=DB[curMonth];if(!mo)return;
   const{jsPDF}=window.jspdf;
@@ -1337,7 +1451,7 @@ function exportMonthlySummaryPDF(){
   const mSum=(emp,keys)=>WKS.reduce((s,w)=>s+keys.reduce((ss,k)=>ss+n2(emp.cells[k+'_'+w]),0),0);
 
   function drawGroup(emps,grp,companyName,startY){
-    const filtered=emps.filter(e=>!WEEKLY_EXCL.includes(e.name));
+    const filtered=emps; // already filtered by getFilteredGroups()
     let y=startY;
     const barClr=grp==='litrad'?[26,79,207]:[6,95,70];
 
@@ -1411,11 +1525,16 @@ function exportMonthlySummaryPDF(){
     return y;
   }
 
+  const fg=getFilteredGroups();
   let y=m;
-  y=drawGroup(mo.litrad,'litrad','LITRAD INC.',y)+4;
-  const jvtCount=mo.jvt.filter(e=>!WEEKLY_EXCL.includes(e.name)).length;
-  if(y+jvtCount*5.5+40>ph-m){doc.addPage();y=m;}
-  drawGroup(mo.jvt,'jvt','JVT CORPORATION',y);
+  let firstDrawn=false;
+  if(fg.litrad.length){ y=drawGroup(fg.litrad,'litrad','LITRAD INC.',y)+4; firstDrawn=true; }
+  if(fg.jvt.length){
+    if(firstDrawn && y+fg.jvt.length*5.5+40>ph-m){doc.addPage();y=m;}
+    drawGroup(fg.jvt,'jvt','JVT CORPORATION',y);
+    firstDrawn=true;
+  }
+  if(!firstDrawn){ alert('Walang employees na kasama base sa filter.'); return; }
   doc.save('MONTHLY_SUMMARY_'+curMonth+'_'+curYear+'.pdf');
 }
 
@@ -1473,7 +1592,7 @@ function exportWeeklyBreakdownPDF(selectedWk, layout){
 
   // Draw one section (one company) starting at y
   function drawSection(doc,emps,companyName,grp,startY){
-    const filtered=emps.filter(e=>!WEEKLY_EXCL.includes(e.name));
+    const filtered=emps; // already filtered by getFilteredGroups()
     if(!filtered.length)return startY;
     let y=startY;
     const barClr=grp==='litrad'?[26,79,207]:[6,95,70];
@@ -1573,17 +1692,26 @@ function exportWeeklyBreakdownPDF(selectedWk, layout){
     return y;
   }
 
+  const fg=getFilteredGroups();
+  if(!fg.litrad.length && !fg.jvt.length){ alert('Walang employees na kasama base sa filter.'); return; }
+
   if(layout==='combined'){
     const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
-    let y=drawSection(doc,mo.litrad,'LITRAD INC.','litrad',M)+6;
-    if(y+40>PH-M){doc.addPage();y=M;}
-    drawSection(doc,mo.jvt,'JVT CORPORATION','jvt',y);
+    let y=M, firstDrawn=false;
+    if(fg.litrad.length){ y=drawSection(doc,fg.litrad,'LITRAD INC.','litrad',y)+6; firstDrawn=true; }
+    if(fg.jvt.length){
+      if(firstDrawn && y+40>PH-M){doc.addPage();y=M;}
+      drawSection(doc,fg.jvt,'JVT CORPORATION','jvt',y);
+    }
     doc.save('WEEKLY_'+selectedWk+'_COMBINED_'+curMonth+'_'+curYear+'.pdf');
   } else {
     const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
-    drawSection(doc,mo.litrad,'LITRAD INC.','litrad',M);
-    doc.addPage();
-    drawSection(doc,mo.jvt,'JVT CORPORATION','jvt',M);
+    let pageUsed=false;
+    if(fg.litrad.length){ drawSection(doc,fg.litrad,'LITRAD INC.','litrad',M); pageUsed=true; }
+    if(fg.jvt.length){
+      if(pageUsed) doc.addPage();
+      drawSection(doc,fg.jvt,'JVT CORPORATION','jvt',M);
+    }
     doc.save('WEEKLY_'+selectedWk+'_'+curMonth+'_'+curYear+'.pdf');
   }
 }
@@ -1657,6 +1785,61 @@ function setSummaryPdfMode(mode){
   if(wkRow)wkRow.style.display=mode==='weekly'?'flex':'none';
   if(layoutPicker){layoutPicker.style.display=mode==='weekly'?'flex':'none';}
 }
+function exportSummaryExcel(){
+  const mo=DB[curMonth];
+  if(!curMonth||!mo){ alert('Walang data para i-export. Pumili muna ng month na may laman.'); return; }
+  const fg=getFilteredGroups();
+  const litrad=fg.litrad, jvt=fg.jvt;
+  if(!litrad.length && !jvt.length){ alert('Walang employees na kasama base sa filter.'); return; }
+
+  const mSum=(emp,keys)=>WKS.reduce((s,w)=>s+keys.reduce((ss,k)=>ss+n2(emp.cells[k+'_'+w]),0),0);
+  const cols=['COMPANY','EMPLOYEE','REG PAY','ALLOWANCE','OT PAY','HOL PAY','SSS','PHILHEALTH','PAG-IBIG','SSS LOAN','PAG-IBIG LOAN','ABSENCES/DEDS','TOTAL EARNINGS','NET PAY'];
+  const rows=[cols.join(',')];
+
+  function addGroup(emps,companyName){
+    emps.forEach(emp=>{
+      const reg=mSum(emp,['pay']), allow=mSum(emp,['allow']), ot=mSum(emp,['ot']), hol=mSum(emp,['hol']);
+      const sss=mSum(emp,['sss']), ph=mSum(emp,['ph']), pag=mSum(emp,['pag']);
+      const sssl=mSum(emp,['sssl']), pagl=mSum(emp,['pagl']), abs=mSum(emp,['abs']);
+      const totalEarn=reg+allow+ot+hol;
+      const totalDed=sss+ph+pag+sssl+pagl+abs;
+      const net=totalEarn-totalDed;
+      const r=[
+        companyName, `"${emp.name}"`,
+        reg.toFixed(2), allow.toFixed(2), ot.toFixed(2), hol.toFixed(2),
+        sss.toFixed(2), ph.toFixed(2), pag.toFixed(2), sssl.toFixed(2), pagl.toFixed(2), abs.toFixed(2),
+        totalEarn.toFixed(2), net.toFixed(2)
+      ];
+      rows.push(r.join(','));
+    });
+    // Group total row
+    if(emps.length){
+      const sumKey=(k)=>emps.reduce((s,e)=>s+mSum(e,[k]),0);
+      const reg=sumKey('pay'), allow=sumKey('allow'), ot=sumKey('ot'), hol=sumKey('hol');
+      const sss=sumKey('sss'), ph=sumKey('ph'), pag=sumKey('pag'), sssl=sumKey('sssl'), pagl=sumKey('pagl'), abs=sumKey('abs');
+      const totalEarn=reg+allow+ot+hol;
+      const totalDed=sss+ph+pag+sssl+pagl+abs;
+      const net=totalEarn-totalDed;
+      rows.push([
+        companyName, '"TOTAL"',
+        reg.toFixed(2), allow.toFixed(2), ot.toFixed(2), hol.toFixed(2),
+        sss.toFixed(2), ph.toFixed(2), pag.toFixed(2), sssl.toFixed(2), pagl.toFixed(2), abs.toFixed(2),
+        totalEarn.toFixed(2), net.toFixed(2)
+      ].join(','));
+    }
+  }
+
+  addGroup(litrad,'LITRAD');
+  addGroup(jvt,'JVT');
+
+  const csvContent='\ufeff'+rows.join('\r\n');
+  const blob=new Blob([csvContent],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`MONTHLY_SUMMARY_${curMonth}_${curYear}.csv`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+
 function doExportSummaryPDF(){
   // Detect mode: if weekly button has dark background, mode is weekly
   const btnW=document.getElementById('pdf-opt-weekly');
@@ -1671,18 +1854,381 @@ function doExportSummaryPDF(){
     exportWeeklyBreakdownPDF(wk, layout);
   }
 }
-save=function(){localStorage.setItem('pr26c_'+curYear,JSON.stringify(DB));localStorage.setItem('pr26cm_'+curYear,curMonth);};
-load=function(){
-  curYear=localStorage.getItem('pr26_curyear')||new Date().getFullYear().toString();
-  getYearList();
-  const raw=localStorage.getItem('pr26c_'+curYear)||localStorage.getItem('pr26c');
-  DB=raw?JSON.parse(raw):{};
-  curMonth=localStorage.getItem('pr26cm_'+curYear)||localStorage.getItem('pr26cm')||'';
-  if(!Object.keys(DB).filter(k=>k!=='_empMeta').length){DB['JANUARY']=seedJan();DB['FEBRUARY']=seedFeb();curMonth='FEBRUARY';}
-  if(!curMonth||!DB[curMonth])curMonth=Object.keys(DB).filter(k=>k!=='_empMeta')[0]||'';
+// ── FIREBASE SYNC ──
+// fbSave defined in module below
+
+save=function(){
+  localStorage.setItem('pr26c_'+curYear, JSON.stringify(DB));
+  localStorage.setItem('pr26cm_'+curYear, curMonth);
+  localStorage.setItem('pr26_curyear', curYear);
+  if(typeof window.fbSave==='function') window.fbSave();
 };
 
-load();renderAll();
+load=function(){
+  curYear = localStorage.getItem('pr26_curyear') || new Date().getFullYear().toString();
+  getYearList();
+
+  // Show loading spinner
+  document.body.insertAdjacentHTML('beforeend',
+    '<div id="fb-loading" style="position:fixed;inset:0;background:rgba(255,255,255,.92);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px">'
+    +'<style>@keyframes fbspin{to{transform:rotate(360deg)}}</style>'
+    +'<div style="width:40px;height:40px;border:4px solid #dbeafe;border-top:4px solid #1d4ed8;border-radius:50%;animation:fbspin .7s linear infinite"></div>'
+    +'<div style="font-size:13px;font-weight:700;color:#1e3a8a;letter-spacing:.5px">LOADING PAYROLL DATA...</div>'
+    +'</div>'
+  );
+
+  function removeSpin(){ document.getElementById('fb-loading')?.remove(); }
+
+  function applyAndRender(raw, month){
+    try{ DB = raw ? JSON.parse(raw) : {}; }catch(e){ DB={}; }
+    curMonth = month || '';
+    if(!Object.keys(DB).filter(k=>k!=='_empMeta').length){
+      DB['JANUARY']=seedJan(); DB['FEBRUARY']=seedFeb(); curMonth='FEBRUARY';
+    }
+    if(!curMonth||!DB[curMonth]) curMonth=Object.keys(DB).filter(k=>k!=='_empMeta')[0]||'';
+    localStorage.setItem('pr26c_'+curYear, JSON.stringify(DB));
+    localStorage.setItem('pr26cm_'+curYear, curMonth);
+    removeSpin();
+    renderAll();
+  }
+
+  function loadFromLocal(){
+    const raw = localStorage.getItem('pr26c_'+curYear) || localStorage.getItem('pr26c');
+    const month = localStorage.getItem('pr26cm_'+curYear) || localStorage.getItem('pr26cm') || '';
+    applyAndRender(raw, month);
+  }
+
+  // Firebase load handled by module script below
+  if(typeof window.fbLoad==='function'){
+    window.fbLoad(curYear, applyAndRender, loadFromLocal);
+  } else {
+    loadFromLocal();
+  }
+};
+
+// ── ABSENCES SUMMARY ──
+function renderAbsences(){
+  const area=document.getElementById('absences-area');
+  if(!area)return;
+  if(!DB[curMonth]){area.innerHTML='<div style="padding:40px;text-align:center;color:var(--text3)">No data for this month.</div>';return;}
+
+  // Per-month state: which company filter, and excluded employee names
+  if(!DB[curMonth]._absMeta) DB[curMonth]._absMeta={company:'all',excluded:[]};
+  const meta=DB[curMonth]._absMeta;
+  if(!meta.excluded) meta.excluded=[];
+  if(!meta.company) meta.company='all';
+
+  function getDR(emp){
+    if(emp.dailyRate&&Number(emp.dailyRate)>0)return Number(emp.dailyRate);
+    for(const w of WKS){const p=n2(emp.cells['pay_'+w]);if(p>0)return p/(emp.workDays||6);}
+    return 0;
+  }
+
+  const allGroups=[
+    {key:'litrad',label:'LITRAD EMPLOYEES',emps:DB[curMonth].litrad||[],color:'#1a4fcf'},
+    {key:'jvt',label:'JVT PAYROLL',emps:DB[curMonth].jvt||[],color:'#0e7c5a'},
+  ];
+
+  // Filter by company selection
+  const groups = meta.company==='all' ? allGroups : allGroups.filter(g=>g.key===meta.company);
+
+  // Compute totals only for INCLUDED (not excluded) employees
+  let totAbsAmt=0,totDays=0,totEmp=0;
+  groups.forEach(grp=>{
+    grp.emps.forEach(emp=>{
+      if(meta.excluded.includes(emp.name)) return;
+      const t=WKS.reduce((s,w)=>s+n2(emp.cells['abs_'+w]),0);
+      if(t>0){totAbsAmt+=t;totEmp++;const dr=getDR(emp);if(dr>0)totDays+=t/dr;}
+    });
+  });
+
+  let html=`<div style="padding:18px 20px">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+      <div style="font-size:16px;font-weight:800;color:#1a1f36;letter-spacing:.5px">ABSENCE SUMMARY</div>
+      <div style="font-size:12px;font-weight:700;color:#6b7a99;background:#f0f2f7;padding:4px 12px;border-radius:20px">${curMonth} ${curYear}</div>
+
+      <select id="abs-company-filter" onchange="setAbsCompany(this.value)" style="margin-left:8px;padding:7px 14px;border:1.5px solid #d0d7e8;border-radius:7px;font-size:12px;font-weight:700;color:#1a1f36;background:#fff;cursor:pointer;outline:none">
+        <option value="all"${meta.company==='all'?' selected':''}>🏢 All Companies</option>
+        <option value="litrad"${meta.company==='litrad'?' selected':''}>LITRAD only</option>
+        <option value="jvt"${meta.company==='jvt'?' selected':''}>JVT only</option>
+      </select>
+
+      <button onclick="openAbsManage()" style="padding:7px 14px;background:#fff;border:1.5px solid #1a4fcf;color:#1a4fcf;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:.3px">⚙ Manage Employees</button>
+
+      <button onclick="exportAbsPDF()" style="margin-left:auto;padding:7px 16px;background:#e03535;color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:.5px">📄 Export PDF</button>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap">
+      <div style="background:#fff;border:1px solid #e5e7eb;border-left:4px solid #e03535;border-radius:8px;padding:12px 18px;min-width:160px">
+        <div style="font-size:10px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Employees w/ Absences</div>
+        <div style="font-size:26px;font-weight:800;color:#e03535">${totEmp}</div>
+      </div>
+      <div style="background:#fff;border:1px solid #e5e7eb;border-left:4px solid #f59e0b;border-radius:8px;padding:12px 18px;min-width:160px">
+        <div style="font-size:10px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Est. Total Days Absent</div>
+        <div style="font-size:26px;font-weight:800;color:#f59e0b">${totDays.toFixed(1)}</div>
+      </div>
+      <div style="background:#fff;border:1px solid #e5e7eb;border-left:4px solid #1a4fcf;border-radius:8px;padding:12px 18px;min-width:160px">
+        <div style="font-size:10px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Total Abs Deductions</div>
+        <div style="font-size:26px;font-weight:800;color:#1a4fcf">₱${totAbsAmt.toLocaleString('en-PH',{minimumFractionDigits:2})}</div>
+      </div>
+    </div>`;
+
+  groups.forEach(grp=>{
+    const includedEmps = grp.emps.filter(emp=>!meta.excluded.includes(emp.name));
+    if(!includedEmps.length){
+      html+=`<div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:24px;margin-bottom:16px;text-align:center;color:#999;font-size:12px">
+        <div style="font-weight:700;color:${grp.color};margin-bottom:4px">${grp.label}</div>
+        No employees included. Click <b>⚙ Manage Employees</b> to add some.
+      </div>`;
+      return;
+    }
+    const rows=includedEmps.map(emp=>{
+      const wa=WKS.map(w=>n2(emp.cells['abs_'+w]));
+      const tot=wa.reduce((s,v)=>s+v,0);
+      const dr=getDR(emp);
+      return{emp,wa,tot,days:dr>0?tot/dr:0,dr};
+    });
+    const absCount=rows.filter(r=>r.tot>0).length;
+    const wkTots=WKS.map((_,i)=>rows.reduce((s,r)=>s+r.wa[i],0));
+    const grpTot=rows.reduce((s,r)=>s+r.tot,0);
+    const grpDays=rows.reduce((s,r)=>s+r.days,0);
+    html+=`<div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;margin-bottom:16px">
+      <div style="background:${grp.color};color:#fff;padding:10px 16px;font-size:11px;font-weight:800;letter-spacing:1px;display:flex;align-items:center;gap:10px">
+        ${grp.label}
+        <span style="background:rgba(255,255,255,.2);border-radius:10px;padding:2px 8px;font-size:10px">${absCount} with absences · ${includedEmps.length} included</span>
+      </div>
+      <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;min-width:650px">
+        <thead><tr style="background:#f8f9ff">
+          <th style="padding:9px 12px;text-align:left;font-size:10px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #e5e7eb">Employee</th>
+          <th style="padding:9px 10px;text-align:center;font-size:10px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #e5e7eb">Daily Rate</th>
+          ${WKS.map(w=>`<th style="padding:9px 10px;text-align:right;font-size:10px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #e5e7eb">${w}</th>`).join('')}
+          <th style="padding:9px 12px;text-align:right;font-size:10px;font-weight:700;color:#e03535;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #e5e7eb">Total Deducted</th>
+          <th style="padding:9px 12px;text-align:right;font-size:10px;font-weight:700;color:#f59e0b;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #e5e7eb">Est. Days</th>
+        </tr></thead>
+        <tbody>`;
+    rows.forEach(({emp,wa,tot,days,dr},i)=>{
+      const has=tot>0;
+      html+=`<tr style="background:${has?(i%2===0?'#fff':'#fafbff'):'#fafafa'};border-bottom:1px solid #f0f0f0">
+        <td style="padding:9px 12px;font-size:12px;font-weight:${has?700:400};color:${has?'#1a1f36':'#bbb'};white-space:nowrap">${emp.name}</td>
+        <td style="padding:9px 10px;text-align:center;font-size:11px;color:#888;font-family:monospace">${dr>0?'₱'+dr.toFixed(2):'—'}</td>
+        ${wa.map(v=>v>0
+          ?`<td style="padding:9px 10px;text-align:right;font-size:12px;font-weight:700;color:#e03535;font-family:monospace">₱${v.toLocaleString('en-PH',{minimumFractionDigits:2})}</td>`
+          :`<td style="padding:9px 10px;text-align:center;color:#ddd;font-size:12px">—</td>`
+        ).join('')}
+        <td style="padding:9px 12px;text-align:right;font-size:12px;font-weight:800;color:${has?'#e03535':'#ddd'};font-family:monospace">${has?'₱'+tot.toLocaleString('en-PH',{minimumFractionDigits:2}):'—'}</td>
+        <td style="padding:9px 12px;text-align:right;font-size:12px;font-weight:700;color:${has?'#f59e0b':'#ddd'}">${days>0?days.toFixed(1)+'d':'—'}</td>
+      </tr>`;
+    });
+    html+=`<tr style="background:#eef2ff;border-top:2px solid ${grp.color}">
+      <td colspan="2" style="padding:9px 12px;font-size:11px;font-weight:800;color:${grp.color};text-transform:uppercase">TOTAL</td>
+      ${wkTots.map(v=>v>0?`<td style="padding:9px 10px;text-align:right;font-size:12px;font-weight:800;color:${grp.color};font-family:monospace">₱${v.toLocaleString('en-PH',{minimumFractionDigits:2})}</td>`:`<td style="text-align:center;color:#aaa">—</td>`).join('')}
+      <td style="padding:9px 12px;text-align:right;font-size:13px;font-weight:800;color:${grp.color};font-family:monospace">₱${grpTot.toLocaleString('en-PH',{minimumFractionDigits:2})}</td>
+      <td style="padding:9px 12px;text-align:right;font-size:12px;font-weight:800;color:#f59e0b">${grpDays.toFixed(1)}d</td>
+    </tr>
+    </tbody></table></div></div>`;
+  });
+  html+=`</div>`;
+  area.innerHTML=html;
+}
+
+// ── Absence Company Filter ──
+function setAbsCompany(val){
+  if(!DB[curMonth]) return;
+  if(!DB[curMonth]._absMeta) DB[curMonth]._absMeta={company:'all',excluded:[]};
+  DB[curMonth]._absMeta.company=val;
+  save();
+  renderAbsences();
+}
+
+// ── Manage Employees Modal (Add/Remove from Absence Summary) ──
+function openAbsManage(){
+  if(!DB[curMonth]) return;
+  if(!DB[curMonth]._absMeta) DB[curMonth]._absMeta={company:'all',excluded:[]};
+  const meta=DB[curMonth]._absMeta;
+  if(!meta.excluded) meta.excluded=[];
+
+  const allGroups=[
+    {key:'litrad',label:'LITRAD EMPLOYEES',emps:DB[curMonth].litrad||[]},
+    {key:'jvt',label:'JVT PAYROLL',emps:DB[curMonth].jvt||[]},
+  ];
+
+  let modal=document.getElementById('abs-manage-modal');
+  if(modal) modal.remove();
+
+  let listHtml='';
+  allGroups.forEach(grp=>{
+    if(!grp.emps.length) return;
+    listHtml+=`<div style="font-size:10px;font-weight:800;color:#6b7a99;text-transform:uppercase;letter-spacing:1px;margin:14px 0 8px;padding-bottom:6px;border-bottom:1px solid #e5e7eb">${grp.label}</div>`;
+    grp.emps.forEach(emp=>{
+      const checked = !meta.excluded.includes(emp.name);
+      listHtml+=`<label style="display:flex;align-items:center;gap:10px;padding:7px 4px;cursor:pointer;font-size:13px;color:#1a1f36">
+        <input type="checkbox" data-empname="${emp.name.replace(/"/g,'&quot;')}" ${checked?'checked':''} style="width:16px;height:16px;cursor:pointer;accent-color:#1a4fcf">
+        ${emp.name}
+      </label>`;
+    });
+  });
+
+  modal=document.createElement('div');
+  modal.id='abs-manage-modal';
+  modal.style.cssText='position:fixed;inset:0;background:rgba(20,25,40,.5);z-index:9000;display:flex;align-items:center;justify-content:center;padding:20px';
+  modal.innerHTML=`
+    <div style="background:#fff;border-radius:14px;max-width:420px;width:100%;max-height:80vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.3)">
+      <div style="padding:18px 20px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between">
+        <div style="font-size:14px;font-weight:800;color:#1a1f36">Manage Absence Summary</div>
+        <button onclick="closeAbsManage()" style="background:none;border:none;font-size:20px;color:#999;cursor:pointer;line-height:1">×</button>
+      </div>
+      <div style="padding:6px 20px;font-size:11px;color:#888">Untick para tanggalin sa absence summary.</div>
+      <div id="abs-manage-list" style="padding:6px 20px 18px;overflow-y:auto;flex:1">
+        ${listHtml||'<div style="text-align:center;color:#999;padding:20px;font-size:12px">No employees this month.</div>'}
+      </div>
+      <div style="padding:14px 20px;border-top:1px solid #e5e7eb;display:flex;gap:8px;justify-content:flex-end">
+        <button onclick="closeAbsManage()" style="padding:8px 16px;background:#f0f2f7;border:none;border-radius:7px;font-size:12px;font-weight:700;color:#555;cursor:pointer">Cancel</button>
+        <button onclick="saveAbsManage()" style="padding:8px 18px;background:#1a4fcf;border:none;border-radius:7px;font-size:12px;font-weight:700;color:#fff;cursor:pointer">Save</button>
+      </div>
+    </div>`;
+  document.body.appendChild(modal);
+}
+
+function closeAbsManage(){
+  const modal=document.getElementById('abs-manage-modal');
+  if(modal) modal.remove();
+}
+
+function saveAbsManage(){
+  if(!DB[curMonth]) { closeAbsManage(); return; }
+  if(!DB[curMonth]._absMeta) DB[curMonth]._absMeta={company:'all',excluded:[]};
+  const modal=document.getElementById('abs-manage-modal');
+  if(!modal){ closeAbsManage(); return; }
+  const checkboxes=modal.querySelectorAll('input[type="checkbox"][data-empname]');
+  const excluded=[];
+  checkboxes.forEach(cb=>{ if(!cb.checked) excluded.push(cb.dataset.empname); });
+  DB[curMonth]._absMeta.excluded=excluded;
+  save();
+  closeAbsManage();
+  renderAbsences();
+}
+
+function exportAbsPDF(){
+  const{jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:'landscape',unit:'pt',format:'a4'});
+  const PW=doc.internal.pageSize.getWidth(),M=36;
+  let y=M;
+  doc.setFillColor(26,79,207);doc.rect(M,y,PW-M*2,30,'F');
+  doc.setFont('helvetica','bold');doc.setFontSize(12);doc.setTextColor(255,255,255);
+  doc.text('ABSENCE SUMMARY — '+curMonth+' '+curYear,M+10,y+20);
+  y+=42;
+  function getDR(emp){
+    if(emp.dailyRate&&Number(emp.dailyRate)>0)return Number(emp.dailyRate);
+    for(const w of WKS){const p=n2(emp.cells['pay_'+w]);if(p>0)return p/(emp.workDays||6);}
+    return 0;
+  }
+  const meta=DB[curMonth]?._absMeta||{company:'all',excluded:[]};
+  const excluded=meta.excluded||[];
+  const allGroups=[
+    {key:'litrad',label:'LITRAD EMPLOYEES',emps:DB[curMonth]?.litrad||[],color:[26,79,207]},
+    {key:'jvt',label:'JVT PAYROLL',emps:DB[curMonth]?.jvt||[],color:[14,124,90]},
+  ];
+  const groups = (meta.company==='all'?allGroups:allGroups.filter(g=>g.key===meta.company))
+    .map(g=>({...g, emps:g.emps.filter(e=>!excluded.includes(e.name))}));
+  groups.forEach(grp=>{
+    if(!grp.emps.length)return;
+    const rows=grp.emps.map(emp=>{
+      const wa=WKS.map(w=>n2(emp.cells['abs_'+w]));
+      const tot=wa.reduce((s,v)=>s+v,0);
+      const dr=getDR(emp);
+      const days=dr>0?tot/dr:0;
+      return[emp.name,dr>0?'₱'+dr.toFixed(2):'—',...wa.map(v=>v>0?'₱'+v.toLocaleString('en-PH',{minimumFractionDigits:2}):'—'),tot>0?'₱'+tot.toLocaleString('en-PH',{minimumFractionDigits:2}):'—',days>0?days.toFixed(1)+'d':'—'];
+    });
+    const wkT=WKS.map((_,i)=>grp.emps.reduce((s,e)=>s+n2(e.cells['abs_'+WKS[i]]),0));
+    const gT=grp.emps.reduce((s,e)=>s+WKS.reduce((ss,w)=>ss+n2(e.cells['abs_'+w]),0),0);
+    const gD=grp.emps.reduce((s,e)=>{const dr=getDR(e);const t=WKS.reduce((ss,w)=>ss+n2(e.cells['abs_'+w]),0);return s+(dr>0?t/dr:0);},0);
+    rows.push(['TOTAL','',...wkT.map(v=>v>0?'₱'+v.toLocaleString('en-PH',{minimumFractionDigits:2}):'—'),'₱'+gT.toLocaleString('en-PH',{minimumFractionDigits:2}),gD.toFixed(1)+'d']);
+    doc.autoTable({
+      startY:y,margin:{left:M,right:M},
+      head:[[{content:grp.label,colSpan:WKS.length+4,styles:{fillColor:grp.color,textColor:[255,255,255],fontStyle:'bold',fontSize:9}}],
+            ['EMPLOYEE','DAILY RATE',...WKS,'TOTAL DEDUCTED','EST. DAYS']],
+      body:rows,
+      styles:{fontSize:8,cellPadding:{top:4,bottom:4,left:5,right:5},lineColor:[220,225,235],lineWidth:0.4},
+      headStyles:{fillColor:[240,244,255],textColor:[60,80,140],fontStyle:'bold',fontSize:7,halign:'center'},
+      columnStyles:{0:{halign:'left',cellWidth:120},1:{halign:'center',cellWidth:65},...Object.fromEntries(WKS.map((_,i)=>[i+2,{halign:'right',cellWidth:65}])),[WKS.length+2]:{halign:'right',cellWidth:85,fontStyle:'bold'},[WKS.length+3]:{halign:'right',cellWidth:55}},
+      didParseCell(d){if(d.row.index===rows.length-1){d.cell.styles.fontStyle='bold';d.cell.styles.fillColor=[240,244,255];d.cell.styles.textColor=grp.color;}},
+      alternateRowStyles:{fillColor:[248,250,255]},
+    });
+    y=doc.lastAutoTable.finalY+16;
+  });
+  doc.setFontSize(7);doc.setTextColor(180,180,180);
+  doc.text('Generated: '+new Date().toLocaleString('en-PH'),M,y+14);
+  doc.save('Absences-'+curMonth+'-'+curYear+'.pdf');
+}
+
+</script>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAHvWv_vbKM-ygR9hwjH9AomRzaYN4DJUw",
+  authDomain: "litrad-jvtpayroll.firebaseapp.com",
+  projectId: "litrad-jvtpayroll",
+  storageBucket: "litrad-jvtpayroll.firebasestorage.app",
+  messagingSenderId: "332077655342",
+  appId: "1:332077655342:web:5e44ddc2d2013de6ae86bf"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+const COL = 'payroll';
+
+// Expose fbSave to main script
+window.fbSave = function(){
+  const curYear = localStorage.getItem('pr26_curyear') || new Date().getFullYear().toString();
+  const DB_raw  = localStorage.getItem('pr26c_'+curYear);
+  const curMonth= localStorage.getItem('pr26cm_'+curYear) || '';
+  const ts = Date.now();
+  localStorage.setItem('pr26_ts_'+curYear, ts);
+  const payload = { DB: DB_raw, curMonth, curYear, updatedAt: ts };
+  setDoc(doc(db, COL, 'payroll_'+curYear), payload)
+    .then(()=>console.log('Firestore: saved OK'))
+    .catch(e=>console.error('Firestore: save error', e));
+};
+
+// Expose fbLoad to main script
+window.fbLoad = function(curYear, applyAndRender, loadFromLocal){
+  getDoc(doc(db, COL, 'payroll_'+curYear))
+    .then(snap => {
+      if(snap.exists()){
+        console.log('Firestore: data loaded');
+        const d = snap.data();
+        applyAndRender(d.DB, d.curMonth);
+        // Real-time listener
+        onSnapshot(doc(db, COL, 'payroll_'+curYear), snap => {
+          if(!snap.exists()) return;
+          const d = snap.data();
+          const localTs = parseInt(localStorage.getItem('pr26_ts_'+curYear)||'0');
+          if(d.updatedAt > localTs + 2000){
+            console.log('Firestore: remote update received');
+            localStorage.setItem('pr26_ts_'+curYear, d.updatedAt);
+            localStorage.setItem('pr26c_'+curYear, d.DB);
+            localStorage.setItem('pr26cm_'+curYear, d.curMonth);
+            applyAndRender(d.DB, d.curMonth);
+          }
+        });
+      } else {
+        console.log('Firestore: no data yet, uploading local...');
+        loadFromLocal();
+        window.fbSave();
+      }
+    })
+    .catch(e => {
+      console.error('Firestore: load failed', e);
+      loadFromLocal();
+    });
+};
+
+// Call load() now that Firebase is ready
+// load() is defined in the main script above
+window.load();
 </script>
 </body>
 </html>
